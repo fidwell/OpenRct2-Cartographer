@@ -8,20 +8,53 @@ export default class ColourDecider {
     const tile = map.getTile(x + 1, y + 1); // Off-by-one index
 
     const topElement = tile.elements
-      .filter(t => t.type === "footpath" || t.type === "surface")
+      .filter(e => this.isValidElement(e))
       .reduce((prev, current) => prev.baseHeight > current.baseHeight ? prev : current);
 
     switch (topElement.type) {
+      case "track":
+        return this.getColourFromTrack(topElement as TrackElement);
       case "footpath":
         return this.getColourFromFootpath(topElement as FootpathElement);
+      case "small_scenery":
+        return this.getColourFromSmallScenery(topElement as SmallSceneryElement);
+      case "large_scenery":
+        return this.getColourFromLargeScenery(topElement as LargeSceneryElement);
       case "surface":
       default:
         return this.getColourFromSurface(topElement as SurfaceElement);
     }
   }
 
-  static getColourFromFootpath(tile: FootpathElement): number {
-    return this.getColourFromFootpathType(tile.object);
+  static isValidElement(e: TileElement): boolean {
+    if (e.isHidden) return false;
+
+    if (e.type === "track") {
+      const tE = e as TrackElement;
+      const ride = map.getRide(tE.ride);
+      return ride.type <= 97 && [82, 83, 84, 85, 89].indexOf(ride.type) == -1;
+    }
+
+    return e.type === "footpath" ||
+      e.type === "small_scenery" ||
+      e.type === "large_scenery" ||
+      e.type === "surface";
+  }
+
+  static getColourFromTrack(element: TrackElement): number {
+    return ColourUtilities.colourToPalette(map.getRide(element.ride).colourSchemes[element.colourScheme].main);
+  }
+
+  static getColourFromSmallScenery(element: SmallSceneryElement) {
+    return ColourUtilities.colourToPalette(element.primaryColour);
+  }
+
+  static getColourFromLargeScenery(element: LargeSceneryElement) {
+    return ColourUtilities.colourToPalette(element.primaryColour);
+  }
+
+  static getColourFromFootpath(element: FootpathElement): number {
+    return this.getColourFromFootpathType(element.object);
   }
 
   static getColourFromSurface(element: SurfaceElement): number {

@@ -11,7 +11,7 @@ export default class ColourUtilities {
       case Terrain.Rock: return 12;
       case Terrain.Martian: return 63;
       case Terrain.Checkerboard: return 20;
-      case Terrain.GrassClumps: return 27;
+      case Terrain.GrassClumps: return 84;
       case Terrain.Ice: return 139;
       case Terrain.GridRed: return 173;
       case Terrain.GridYellow: return 54;
