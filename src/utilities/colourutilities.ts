@@ -24,6 +24,10 @@ export default class ColourUtilities {
     return 209; // undefined -> pink
   }
 
+  static water(): number {
+    return 237;
+  }
+
   static colourToPalette(colour: number): number {
     switch (colour) {
       case Colour.DarkGreen: return 144;

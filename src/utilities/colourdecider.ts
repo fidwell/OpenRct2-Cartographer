@@ -3,16 +3,29 @@ import * as Log from "./logger";
 
 export default class ColourDecider {
   static getColourAtTile(x: number, y: number): number {
-    const tileHere = map.getTile(x + 1, y + 1); // Off-by-one index
-    const surfaceElements = tileHere.elements.filter(e => e.type === "surface");
+    const tile = map.getTile(x + 1, y + 1); // Off-by-one index
+    return this.getColorFromSurface(tile);
+  }
+
+  static getColorFromSurface(tile: Tile): number {
+    const surfaceElements = tile.elements.filter(e => e.type === "surface");
 
     if (surfaceElements.length >= 1) {
-      // It is possible to have multiple surface elements on one tile.
-      // If so, we should find the highest one instead of whichever is first.
-      const surfaceElement: SurfaceElement = surfaceElements[0] as SurfaceElement;
+      let surfaceElement: SurfaceElement;
+
+      if (surfaceElements.length > 1) {
+        surfaceElement = surfaceElements.reduce((prev, current) => prev.baseHeight > current.baseHeight ? prev : current) as SurfaceElement;
+      } else {
+        surfaceElement = surfaceElements[0] as SurfaceElement;
+      }
+
+      if (surfaceElement.waterHeight > surfaceElement.baseHeight) {
+        return ColourUtilities.water();
+      }
+
       return ColourUtilities.surfaceToPalette(surfaceElement.surfaceStyle);
     } else if (surfaceElements.length === 0) {
-      Log.warning(`No surface found at (${x},${y})`);
+      Log.warning(`No surface found at (${tile.x},${tile.y})`);
     }
 
     return 0;

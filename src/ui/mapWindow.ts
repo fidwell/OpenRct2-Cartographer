@@ -10,7 +10,7 @@ export default class MapWindow {
 
   private createWindow(): Window {
     const mapSize = map.size.x - 2; // Size is stored as 2 bigger than it really is for some reason
-    const tileSize: number = 6;
+    const tileSize: number = 4;
     const margin: number = 10;
     const toolbarHeight: number = 10;
 

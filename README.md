@@ -8,7 +8,6 @@ Shows an orthogonal (non-isometric) representation of the opened park in a windo
 
 ### Planned features
 
-* Show water
 * Show path
 * Show rides (flat and tracked)
 * Show scenery
