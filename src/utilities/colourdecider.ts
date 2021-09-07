@@ -22,8 +22,9 @@ export default class ColourDecider {
       case "large_scenery":
         return this.getColourFromLargeScenery(topElement as LargeSceneryElement);
       case "surface":
+        return this.getColourFromSurface(topElement as SurfaceElement, options);
       default:
-        return this.getColourFromSurface(topElement as SurfaceElement);
+        return ColourUtilities.colourToPalette(Colour.Black);
     }
   }
 
@@ -61,12 +62,12 @@ export default class ColourDecider {
     return this.getColourFromFootpathType(element.object);
   }
 
-  static getColourFromSurface(element: SurfaceElement): number {
-    if (element.waterHeight > element.baseHeight) {
+  static getColourFromSurface(element: SurfaceElement, options: Options): number {
+    if (options.showWater && element.waterHeight > element.baseHeight) {
       return ColourUtilities.water();
     }
 
-    return ColourUtilities.surfaceToPalette(element.surfaceStyle);
+    return options.showSurface ? ColourUtilities.surfaceToPalette(element.surfaceStyle) : ColourUtilities.colourToPalette(Colour.Black);
   }
 
   private static getColourFromFootpathType(object: number): number {

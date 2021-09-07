@@ -100,6 +100,42 @@ export default class MapWindow {
       }
     };
 
+    const btnShowWater: ButtonWidget = {
+      type: "button",
+      x: margin * 2 + buttonSize * 4,
+      y: margin + toolbarHeight,
+      height: buttonSize,
+      width: buttonSize,
+      name: "showWater",
+      border: true,
+      tooltip: "Toggle water visible",
+      isPressed: this.options.showWater,
+      image: 5467, // SPR_TAB_WATER
+      onClick: (): void => {
+        this.options.showWater = !this.options.showWater;
+        this.loadData();
+        (window.widgets.filter(w => w.name == "showWater")[0] as ButtonWidget).isPressed = this.options.showWater;
+      }
+    };
+
+    const btnShowSurface: ButtonWidget = {
+      type: "button",
+      x: margin * 2 + buttonSize * 5,
+      y: margin + toolbarHeight,
+      height: buttonSize,
+      width: buttonSize,
+      name: "showSurface",
+      border: true,
+      tooltip: "Toggle surface visible",
+      isPressed: this.options.showSurface,
+      image: 29357 + 5, // SPR_G2_TAB_LAND
+      onClick: (): void => {
+        this.options.showSurface = !this.options.showSurface;
+        this.loadData();
+        (window.widgets.filter(w => w.name == "showSurface")[0] as ButtonWidget).isPressed = this.options.showSurface;
+      }
+    };
+
     const mapWidget: CustomWidget = {
       x: margin,
       y: toolbarHeight + buttonSize + margin,
@@ -139,6 +175,8 @@ export default class MapWindow {
         btnShowRides,
         btnShowFootpath,
         btnShowScenery,
+        btnShowWater,
+        btnShowSurface,
         mapWidget
       ],
       onUpdate: () => {

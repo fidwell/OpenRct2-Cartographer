@@ -11,7 +11,6 @@ Shows an orthogonal (non-isometric) representation of the opened park in a windo
 * UI options
   * Refresh
   * Scale
-  * Show/hide surface, water with toggles
 
 Please submit any ideas under [issues](https://github.com/fidwell/OpenRct2-Cartographer/issues).
 
