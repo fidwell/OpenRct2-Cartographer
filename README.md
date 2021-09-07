@@ -1,16 +1,14 @@
 # Cartographer for OpenRCT2
 
-This plugin for will draw a map of your park.
+This is a plugin for OpenRCT2. It will draw a map of your park. Instead of the weird diagonal map that is built in to the game, this map is orthogonally-oriented and thus easier to read. It uses solid colors to represent different surface textures, footpaths, rides, water, and scenery, each of which can be toggled on and off.
 
-## Features
+It doesn't really do anything else, but it looks neat. You could take a screenshot of the map, import it into some image program, and then do something fun with it.
 
-Shows an orthogonal (non-isometric) representation of the opened park in a window, using solid colors to represent different surface textures, footpaths, rides, and scenery.
+### Planned features / known issues
 
-### Planned features
+The map does not automatically refresh during construction (this would cause an enormous performance hit). Instead, close and re-open the map.
 
-* UI options
-  * Refresh
-  * Scale
+Currently, the OpenRCT2 API does not allow for clicking on the map to pan in-game to a location.
 
 Please submit any ideas under [issues](https://github.com/fidwell/OpenRct2-Cartographer/issues).
 
