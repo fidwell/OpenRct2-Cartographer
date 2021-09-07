@@ -1,14 +1,15 @@
 import { Colour } from "../enums/colour";
 import { Footpath } from "../enums/footpath";
+import Options from "../models/options";
 import ColourUtilities from "./colourutilities";
 import * as Log from "./logger";
 
 export default class ColourDecider {
-  static getColourAtTile(x: number, y: number, showRides: boolean): number {
+  static getColourAtTile(x: number, y: number, options: Options): number {
     const tile = map.getTile(x + 1, y + 1); // Off-by-one index
 
     const topElement = tile.elements
-      .filter(e => this.isValidElement(e, showRides))
+      .filter(e => this.isValidElement(e, options))
       .reduce((prev, current) => prev.baseHeight > current.baseHeight ? prev : current);
 
     switch (topElement.type) {
@@ -26,18 +27,18 @@ export default class ColourDecider {
     }
   }
 
-  static isValidElement(e: TileElement, showRides: boolean): boolean {
+  static isValidElement(e: TileElement, options: Options): boolean {
     if (e.isHidden) return false;
 
     if (e.type === "track") {
-      if (!showRides) return false;
+      if (!options.showRides) return false;
 
       const tE = e as TrackElement;
       const ride = map.getRide(tE.ride);
       return ride.type <= 97 && [82, 83, 84, 85, 89].indexOf(ride.type) == -1;
     }
 
-    return e.type === "footpath" ||
+    return (options.showFootpath && e.type === "footpath") ||
       e.type === "small_scenery" ||
       e.type === "large_scenery" ||
       e.type === "surface";

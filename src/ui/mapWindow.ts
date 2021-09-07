@@ -1,6 +1,6 @@
 import ColourDecider from "../utilities/colourdecider"
 import * as Environment from "../environment";
-import * as Log from "../utilities/logger";
+import Options from "../models/options";
 
 export default class MapWindow {
   onUpdate?: () => void;
@@ -13,7 +13,13 @@ export default class MapWindow {
   private mapSize: number;
 
   private rotation: number = 0;
-  private showRides: boolean = true;
+  private options: Options = {
+    showRides: true,
+    showFootpath: true,
+    showScenery: false,
+    showSurface: true,
+    showWater: true
+  };
 
   private createWindow(): Window {
     this.mapSize = map.size.x - 2; // Size is stored as 2 bigger than it really is for some reason
@@ -49,12 +55,30 @@ export default class MapWindow {
       name: "showRides",
       border: true,
       tooltip: "Toggle rides visible",
-      isPressed: this.showRides,
+      isPressed: this.options.showRides,
       image: 5187, // SPR_RIDE
       onClick: (): void => {
-        this.showRides = !this.showRides;
+        this.options.showRides = !this.options.showRides;
         this.loadData();
-        (window.widgets.filter(w => w.name == "showRides")[0] as ButtonWidget).isPressed = this.showRides;
+        (window.widgets.filter(w => w.name == "showRides")[0] as ButtonWidget).isPressed = this.options.showRides;
+      }
+    };
+
+    const btnShowFootpath: ButtonWidget = {
+      type: "button",
+      x: margin * 2 + buttonSize * 2,
+      y: margin + toolbarHeight,
+      height: buttonSize,
+      width: buttonSize,
+      name: "showFootpath",
+      border: true,
+      tooltip: "Toggle footpath visible",
+      isPressed: this.options.showFootpath,
+      image: 29357 + 15, // SPR_G2_BUTTON_FOOTPAT
+      onClick: (): void => {
+        this.options.showFootpath = !this.options.showFootpath;
+        this.loadData();
+        (window.widgets.filter(w => w.name == "showFootpath")[0] as ButtonWidget).isPressed = this.options.showFootpath;
       }
     };
 
@@ -95,6 +119,7 @@ export default class MapWindow {
       widgets: [
         btnRotate,
         btnShowRides,
+        btnShowFootpath,
         mapWidget
       ],
       onUpdate: () => {
@@ -132,7 +157,7 @@ export default class MapWindow {
 
     for (let x = 0; x < this.mapSize; x++) {
       for (let y = 0; y < this.mapSize; y++) {
-        this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.showRides);
+        this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.options);
       }
     }
   }
