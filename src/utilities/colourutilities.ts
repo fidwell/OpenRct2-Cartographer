@@ -6,7 +6,7 @@ export default class ColourUtilities {
   static surfaceToPalette(surface: number): number {
     switch (surface) {
       case Terrain.Grass: return 144;
-      case Terrain.Sand: return 42;
+      case Terrain.Sand: return 299;
       case Terrain.Dirt: return 34;
       case Terrain.Rock: return 12;
       case Terrain.Martian: return 63;
@@ -18,7 +18,7 @@ export default class ColourUtilities {
       case Terrain.GridBlue: return 157; // It's really purple
       case Terrain.GridGreen: return 101;
       case Terrain.SandDark: return 38;
-      case Terrain.SandLight: return 45;
+      case Terrain.SandLight: return 42;
     }
 
     return 209; // undefined -> pink

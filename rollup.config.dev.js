@@ -5,7 +5,7 @@ import { terser } from "rollup-plugin-terser";
 export default {
   input: "./src/registerPlugin.ts",
   output: {
-    file: "./dist/Screenshotter.js", // CHANGE THIS TO YOUR OPENRCT2 PLUGIN FOLDER FOR HOT RELOAD
+    file: "./dist/Cartographer.js", // CHANGE THIS TO YOUR OPENRCT2 PLUGIN FOLDER FOR HOT RELOAD
     // TO IGNORE GIT CHANGES ON THIS FILE: git update-index --skip-worktree rollup.config.dev.js
     // TO ACCEPT GIT CHANGES ON THIS FILE AGAIN: git update-index --no-skip-worktree rollup.config.dev.js
     format: "iife",

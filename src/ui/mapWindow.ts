@@ -1,6 +1,5 @@
-import ColourUtilities from "../utilities/colourutilities";
+import ColourDecider from "../utilities/colourdecider"
 import * as Environment from "../environment";
-import * as Log from "../utilities/logger";
 
 export default class MapWindow {
   onUpdate?: () => void;
@@ -22,7 +21,7 @@ export default class MapWindow {
 
     for (let x = 0; x < mapSize; x++) {
       for (let y = 0; y < mapSize; y++) {
-        mapColours[x][y] = this.getColourAtTile(x, y);
+        mapColours[x][y] = ColourDecider.getColourAtTile(x, y);
       }
     }
 
@@ -30,8 +29,8 @@ export default class MapWindow {
       x: margin,
       y: margin + toolbarHeight,
       type: "custom",
-      width: mapSize * tileSize,
-      height: mapSize * tileSize,
+      width: mapSize * tileSize + 1,
+      height: (1 + mapSize) * tileSize + 1,
       name: "mapWidget",
       onDraw: (g: GraphicsContext) => {
         g.fill = 1; // Yes fill
@@ -51,8 +50,8 @@ export default class MapWindow {
     const window = ui.openWindow({
       classification: Environment.namespace,
       title: `${Environment.pluginName} (v${Environment.pluginVersion})`,
-      width: margin * 2 + tileSize * mapSize,
-      height: margin * 2 + tileSize * mapSize + toolbarHeight,
+      width: margin * 2 + tileSize * mapSize + 1,
+      height: margin * 2 + tileSize * (mapSize + 1) + toolbarHeight + 1,
       widgets: [mapWidget],
       onUpdate: () => {
         if (this.onUpdate) {
@@ -79,21 +78,5 @@ export default class MapWindow {
 
   static close(): void {
     ui.closeWindows(Environment.namespace);
-  }
-
-  getColourAtTile(x: number, y: number): number {
-    const tileHere = map.getTile(x + 1, y + 1); // Off-by-one index
-    const surfaceElements = tileHere.elements.filter(e => e.type === "surface");
-
-    if (surfaceElements.length >= 1) {
-      // It is possible to have multiple surface elements on one tile.
-      // If so, we should find the highest one instead of whichever is first.
-      const surfaceElement: SurfaceElement = surfaceElements[0] as SurfaceElement;
-      return ColourUtilities.surfaceToPalette(surfaceElement.surfaceStyle);
-    } else if (surfaceElements.length === 0) {
-      Log.warning(`No surface found at (${x},${y})`);
-    }
-
-    return 0;
   }
 }
