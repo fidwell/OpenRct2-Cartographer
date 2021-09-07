@@ -4,11 +4,11 @@ import ColourUtilities from "./colourutilities";
 import * as Log from "./logger";
 
 export default class ColourDecider {
-  static getColourAtTile(x: number, y: number): number {
+  static getColourAtTile(x: number, y: number, showRides: boolean): number {
     const tile = map.getTile(x + 1, y + 1); // Off-by-one index
 
     const topElement = tile.elements
-      .filter(e => this.isValidElement(e))
+      .filter(e => this.isValidElement(e, showRides))
       .reduce((prev, current) => prev.baseHeight > current.baseHeight ? prev : current);
 
     switch (topElement.type) {
@@ -26,10 +26,12 @@ export default class ColourDecider {
     }
   }
 
-  static isValidElement(e: TileElement): boolean {
+  static isValidElement(e: TileElement, showRides: boolean): boolean {
     if (e.isHidden) return false;
 
     if (e.type === "track") {
+      if (!showRides) return false;
+
       const tE = e as TrackElement;
       const ride = map.getRide(tE.ride);
       return ride.type <= 97 && [82, 83, 84, 85, 89].indexOf(ride.type) == -1;
