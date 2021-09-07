@@ -73,7 +73,9 @@ export default class ColourDecider {
       case Footpath.Dirt: return ColourUtilities.colourToPalette(Colour.SaturatedBrown);
       case Footpath.Space: return ColourUtilities.colourToPalette(Colour.BordeauxRed);
       case Footpath.Tarmac: return ColourUtilities.colourToPalette(Colour.Grey);
-      case Footpath.Road: return ColourUtilities.colourToPalette(Colour.Grey);
+      case Footpath.Road:
+      case Footpath.Road2:
+        return ColourUtilities.colourToPalette(Colour.Grey);
       case Footpath.Wooden: return ColourUtilities.colourToPalette(Colour.LightBrown);
       case Footpath.Ash: return ColourUtilities.colourToPalette(Colour.Black);
     }

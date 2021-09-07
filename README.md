@@ -4,17 +4,14 @@ This plugin for will draw a map of your park.
 
 ## Features
 
-Shows an orthogonal (non-isometric) representation of the opened park in a window, using solid colors to represent different surface textures.
+Shows an orthogonal (non-isometric) representation of the opened park in a window, using solid colors to represent different surface textures, footpaths, rides, and scenery.
 
 ### Planned features
 
-* Show path
-* Show rides (flat and tracked)
-* Show scenery
 * UI options
   * Refresh
   * Scale
-  * Show/hide elements
+  * Show/hide elements with toggles
 
 Please submit any ideas under [issues](https://github.com/fidwell/OpenRct2-Cartographer/issues).
 

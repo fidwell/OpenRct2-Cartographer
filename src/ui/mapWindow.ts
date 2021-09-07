@@ -1,5 +1,6 @@
 import ColourDecider from "../utilities/colourdecider"
 import * as Environment from "../environment";
+import * as Log from "../utilities/logger";
 
 export default class MapWindow {
   onUpdate?: () => void;
@@ -7,6 +8,7 @@ export default class MapWindow {
   onClose?: () => void;
 
   private window?: Window;
+  private rotation: number = 0;
 
   private createWindow(): Window {
     const mapSize = map.size.x - 2; // Size is stored as 2 bigger than it really is for some reason
@@ -25,9 +27,24 @@ export default class MapWindow {
       }
     }
 
-    const mapWidget: CustomWidget = {
+    const buttonSize: number = 26;
+
+    const btnRotate: ButtonWidget = {
+      type: "button",
       x: margin,
       y: margin + toolbarHeight,
+      height: buttonSize,
+      width: buttonSize,
+      name: "rotate",
+      image: 5169, // SPR_ROTATE_ARROW
+      onClick: (): void => {
+        this.rotation = (this.rotation + 1) % 4;
+      }
+    };
+
+    const mapWidget: CustomWidget = {
+      x: margin,
+      y: toolbarHeight + buttonSize + margin,
       type: "custom",
       width: mapSize * tileSize + 1,
       height: (1 + mapSize) * tileSize + 1,
@@ -38,7 +55,14 @@ export default class MapWindow {
 
         for (let x = 0; x < mapSize; x++) {
           for (let y = 0; y < mapSize; y++) {
-            const colour = mapColours[x][y];
+            let colour: number;
+            switch (this.rotation) {
+              case 1: colour = mapColours[-y + mapSize - 1][x]; break;
+              case 2: colour = mapColours[-x + mapSize - 1][-y + mapSize - 1]; break;
+              case 3: colour = mapColours[y][-x + mapSize - 1]; break;
+              default: colour = mapColours[x][y]; break;
+            }
+
             g.colour = colour;
             g.fill = colour;
             g.rect(x * tileSize, (mapSize - y) * tileSize, tileSize, tileSize);
@@ -51,8 +75,11 @@ export default class MapWindow {
       classification: Environment.namespace,
       title: `${Environment.pluginName} (v${Environment.pluginVersion})`,
       width: margin * 2 + tileSize * mapSize + 1,
-      height: margin * 2 + tileSize * (mapSize + 1) + toolbarHeight + 1,
-      widgets: [mapWidget],
+      height: mapWidget.y + mapWidget.height + margin,
+      widgets: [
+        btnRotate,
+        mapWidget
+      ],
       onUpdate: () => {
         if (this.onUpdate) {
           this.onUpdate();
