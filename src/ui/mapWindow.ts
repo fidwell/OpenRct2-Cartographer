@@ -74,11 +74,29 @@ export default class MapWindow {
       border: true,
       tooltip: "Toggle footpath visible",
       isPressed: this.options.showFootpath,
-      image: 29357 + 15, // SPR_G2_BUTTON_FOOTPAT
+      image: 29357 + 15, // SPR_G2_BUTTON_FOOTPATH
       onClick: (): void => {
         this.options.showFootpath = !this.options.showFootpath;
         this.loadData();
         (window.widgets.filter(w => w.name == "showFootpath")[0] as ButtonWidget).isPressed = this.options.showFootpath;
+      }
+    };
+
+    const btnShowScenery: ButtonWidget = {
+      type: "button",
+      x: margin * 2 + buttonSize * 3,
+      y: margin + toolbarHeight,
+      height: buttonSize,
+      width: buttonSize,
+      name: "showScenery",
+      border: true,
+      tooltip: "Toggle scenery visible",
+      isPressed: this.options.showScenery,
+      image: 5171, // SPR_SCENERY 
+      onClick: (): void => {
+        this.options.showScenery = !this.options.showScenery;
+        this.loadData();
+        (window.widgets.filter(w => w.name == "showScenery")[0] as ButtonWidget).isPressed = this.options.showScenery;
       }
     };
 
@@ -120,6 +138,7 @@ export default class MapWindow {
         btnRotate,
         btnShowRides,
         btnShowFootpath,
+        btnShowScenery,
         mapWidget
       ],
       onUpdate: () => {

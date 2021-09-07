@@ -39,13 +39,14 @@ export default class ColourDecider {
     }
 
     return (options.showFootpath && e.type === "footpath") ||
-      e.type === "small_scenery" ||
-      e.type === "large_scenery" ||
+      (options.showScenery && (e.type === "small_scenery" || e.type === "large_scenery")) ||
       e.type === "surface";
   }
 
   static getColourFromTrack(element: TrackElement): number {
-    return ColourUtilities.colourToPalette(map.getRide(element.ride).colourSchemes[element.colourScheme].main);
+    const ride = map.getRide(element.ride);
+    const scheme = ride.colourSchemes[element.colourScheme];
+    return ColourUtilities.colourToPalette(scheme ? scheme.main : ColourUtilities.colourToPalette(Colour.White));
   }
 
   static getColourFromSmallScenery(element: SmallSceneryElement) {

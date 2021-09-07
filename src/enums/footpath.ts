@@ -1,4 +1,8 @@
-// To do: Figure out the rest of these values. Why are there two for Road?
+// These values are actually the index of the
+// footpath among all *selected* paths in the
+// scenario. So the value will change depending
+// on what's actually used. Need to find a better
+// scheme for footpaths
 
 export enum Footpath {
   Sidewalk = 0,
