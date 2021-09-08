@@ -71,21 +71,20 @@ export default class ColourDecider {
   }
 
   private static getColourFromFootpathType(object: number): number {
-    switch (object) {
-      case Footpath.Sidewalk: return ColourUtilities.colourToPalette(Colour.DarkYellow);
-      case Footpath.BrownTarmac: return ColourUtilities.colourToPalette(Colour.DarkBrown);
-      case Footpath.CrazyPaving: return ColourUtilities.colourToPalette(Colour.LightBrown);
-      case Footpath.Dirt: return ColourUtilities.colourToPalette(Colour.SaturatedBrown);
-      case Footpath.Space: return ColourUtilities.colourToPalette(Colour.BordeauxRed);
-      case Footpath.Tarmac: return ColourUtilities.colourToPalette(Colour.Grey);
-      case Footpath.Road:
-      case Footpath.Road2:
-        return ColourUtilities.colourToPalette(Colour.Grey);
-      case Footpath.Wooden: return ColourUtilities.colourToPalette(Colour.LightBrown);
-      case Footpath.Ash: return ColourUtilities.colourToPalette(Colour.Black);
-    }
+    // We can't actually know what kind of footpath it is just
+    // based on the object number, since that number will
+    // change based on what objects are selected in the map.
 
-    Log.debug(`${object}`);
-    return 173; // unknown
+    // However we should at least differentiate somehow, so
+    // let's pick some colors at random...
+    const colours: number[] = [
+      ColourUtilities.colourToPalette(Colour.Grey),
+      ColourUtilities.colourToPalette(Colour.LightBrown),
+      ColourUtilities.colourToPalette(Colour.DarkBrown),
+      ColourUtilities.colourToPalette(Colour.SaturatedBrown),
+      ColourUtilities.colourToPalette(Colour.DarkOliveGreen)
+    ];
+
+    return colours[object % colours.length];
   }
 }
