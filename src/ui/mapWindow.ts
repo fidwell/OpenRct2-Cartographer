@@ -9,10 +9,18 @@ export default class MapWindow {
 
   private window?: Window;
 
+  // Window-building constants
+  private margin: number = 10;
+  private toolbarHeight: number = 10;
+  private buttonSize: number = 26;
+
+  // Map information
   private mapColours: number[][] = [];
   private mapSize: number;
 
+  // Display parameters
   private rotation: number = 0;
+  private tileSize: number = 4;
   private options: Options = {
     showRides: true,
     showFootpath: true,
@@ -23,20 +31,15 @@ export default class MapWindow {
 
   private createWindow(): Window {
     this.mapSize = map.size.x - 2; // Size is stored as 2 bigger than it really is for some reason
-    const tileSize: number = 4;
-    const margin: number = 10;
-    const toolbarHeight: number = 10;
 
     this.loadData();
 
-    const buttonSize: number = 26;
-
     const btnRotate: ButtonWidget = {
       type: "button",
-      x: margin,
-      y: margin + toolbarHeight,
-      height: buttonSize,
-      width: buttonSize,
+      x: this.margin,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
       name: "rotate",
       border: true,
       tooltip: "Rotate view",
@@ -48,10 +51,10 @@ export default class MapWindow {
 
     const btnShowRides: ButtonWidget = {
       type: "button",
-      x: margin * 2 + buttonSize,
-      y: margin + toolbarHeight,
-      height: buttonSize,
-      width: buttonSize,
+      x: this.margin * 2 + this.buttonSize,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
       name: "showRides",
       border: true,
       tooltip: "Toggle rides visible",
@@ -66,10 +69,10 @@ export default class MapWindow {
 
     const btnShowFootpath: ButtonWidget = {
       type: "button",
-      x: margin * 2 + buttonSize * 2,
-      y: margin + toolbarHeight,
-      height: buttonSize,
-      width: buttonSize,
+      x: this.margin * 2 + this.buttonSize * 2,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
       name: "showFootpath",
       border: true,
       tooltip: "Toggle footpath visible",
@@ -84,10 +87,10 @@ export default class MapWindow {
 
     const btnShowScenery: ButtonWidget = {
       type: "button",
-      x: margin * 2 + buttonSize * 3,
-      y: margin + toolbarHeight,
-      height: buttonSize,
-      width: buttonSize,
+      x: this.margin * 2 + this.buttonSize * 3,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
       name: "showScenery",
       border: true,
       tooltip: "Toggle scenery visible",
@@ -102,10 +105,10 @@ export default class MapWindow {
 
     const btnShowWater: ButtonWidget = {
       type: "button",
-      x: margin * 2 + buttonSize * 4,
-      y: margin + toolbarHeight,
-      height: buttonSize,
-      width: buttonSize,
+      x: this.margin * 2 + this.buttonSize * 4,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
       name: "showWater",
       border: true,
       tooltip: "Toggle water visible",
@@ -120,10 +123,10 @@ export default class MapWindow {
 
     const btnShowSurface: ButtonWidget = {
       type: "button",
-      x: margin * 2 + buttonSize * 5,
-      y: margin + toolbarHeight,
-      height: buttonSize,
-      width: buttonSize,
+      x: this.margin * 2 + this.buttonSize * 5,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
       name: "showSurface",
       border: true,
       tooltip: "Toggle surface visible",
@@ -136,12 +139,48 @@ export default class MapWindow {
       }
     };
 
+    const btnScaleDown: ButtonWidget = {
+      type: "button",
+      x: this.margin * 3 + this.buttonSize * 6,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
+      name: "scaleDown",
+      border: true,
+      tooltip: "Scale down",
+      image: 29357 + 9, // SPR_G2_ZOOM_OUT
+      onClick: (): void => {
+        if (this.tileSize > 1) {
+          this.tileSize = this.tileSize / 2;
+          this.changeSize();
+        }
+      }
+    };
+
+    const btnScaleUp: ButtonWidget = {
+      type: "button",
+      x: this.margin * 3 + this.buttonSize * 7,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
+      name: "scaleUp",
+      border: true,
+      tooltip: "Scale up",
+      image: 29357 + 7, // SPR_G2_ZOOM_IN
+      onClick: (): void => {
+        if (this.tileSize < 16) {
+          this.tileSize = this.tileSize * 2;
+          this.changeSize();
+        }
+      }
+    };
+
     const mapWidget: CustomWidget = {
-      x: margin,
-      y: toolbarHeight + buttonSize + margin,
+      x: this.margin,
+      y: this.toolbarHeight + this.buttonSize + this.margin,
       type: "custom",
-      width: this.mapSize * tileSize + 1,
-      height: (1 + this.mapSize) * tileSize + 1,
+      width: 10000, //this.mapSize * this.tileSize + 1,
+      height: 10000, //(1 + this.mapSize) * this.tileSize + 1,
       name: "mapWidget",
       onDraw: (g: GraphicsContext) => {
         g.fill = 1; // Yes fill
@@ -159,7 +198,7 @@ export default class MapWindow {
 
             g.colour = colour;
             g.fill = colour;
-            g.rect(x * tileSize, (this.mapSize - y) * tileSize, tileSize, tileSize);
+            g.rect(x * this.tileSize, (this.mapSize - y) * this.tileSize, this.tileSize, this.tileSize);
           }
         }
       }
@@ -168,8 +207,12 @@ export default class MapWindow {
     const window = ui.openWindow({
       classification: Environment.namespace,
       title: `${Environment.pluginName} (v${Environment.pluginVersion})`,
-      width: margin * 2 + tileSize * this.mapSize + 1,
-      height: mapWidget.y + mapWidget.height + margin,
+      width: this.margin * 2 + this.tileSize * this.mapSize,
+      height: this.toolbarHeight + this.buttonSize + this.mapSize * this.tileSize + this.margin * 2,
+      maxHeight: 10000,
+      maxWidth: 10000,
+      minHeight: 0,
+      minWidth: btnScaleUp.x + btnScaleUp.width + this.margin,
       widgets: [
         btnRotate,
         btnShowRides,
@@ -177,6 +220,8 @@ export default class MapWindow {
         btnShowScenery,
         btnShowWater,
         btnShowSurface,
+        btnScaleDown,
+        btnScaleUp,
         mapWidget
       ],
       onUpdate: () => {
@@ -216,6 +261,13 @@ export default class MapWindow {
       for (let y = 0; y < this.mapSize; y++) {
         this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.options);
       }
+    }
+  }
+
+  changeSize(): void {
+    if (this.window) {
+      this.window.width = this.margin * 2 + this.tileSize * this.mapSize;
+      this.window.height = this.toolbarHeight + this.buttonSize + this.mapSize * this.tileSize + this.margin * 2;
     }
   }
 }
