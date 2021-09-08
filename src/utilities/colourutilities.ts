@@ -40,8 +40,8 @@ export default class ColourUtilities {
       case Colour.DarkBlue: return 130;
       case Colour.LightBlue: return 136;
       case Colour.IcyBlue: return 201;
-      case Colour.Teal: return 232; // Dark water
-      case Colour.Aquamarine: return 236; // Light water
+      case Colour.Teal: return 194; // Dark and light water colors cause animation even if it's scenery
+      case Colour.Aquamarine: return 200; // 236;
       case Colour.SaturatedGreen: return 196;
       case Colour.DarkGreen: return 144;
       case Colour.MossGreen: return 87;
