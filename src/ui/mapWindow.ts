@@ -208,7 +208,7 @@ export default class MapWindow {
       classification: Environment.namespace,
       title: `${Environment.pluginName} (v${Environment.pluginVersion})`,
       width: this.margin * 2 + this.tileSize * this.mapSize,
-      height: this.toolbarHeight + this.buttonSize + this.mapSize * this.tileSize + this.margin * 2,
+      height: this.toolbarHeight + this.buttonSize + (this.mapSize + 1) * this.tileSize + this.margin * 2,
       maxHeight: 10000,
       maxWidth: 10000,
       minHeight: 0,
@@ -267,7 +267,7 @@ export default class MapWindow {
   changeSize(): void {
     if (this.window) {
       this.window.width = this.margin * 2 + this.tileSize * this.mapSize;
-      this.window.height = this.toolbarHeight + this.buttonSize + this.mapSize * this.tileSize + this.margin * 2;
+      this.window.height = this.toolbarHeight + this.buttonSize + (this.mapSize + 1) * this.tileSize + this.margin * 2;
     }
   }
 }

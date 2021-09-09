@@ -1,16 +1,22 @@
 import { Colour } from "../enums/colour";
-import { Footpath } from "../enums/footpath";
 import Options from "../models/options";
 import ColourUtilities from "./colourutilities";
-import * as Log from "./logger";
 
 export default class ColourDecider {
   static getColourAtTile(x: number, y: number, options: Options): number {
     const tile = map.getTile(x + 1, y + 1); // Off-by-one index
 
-    const topElement = tile.elements
-      .filter(e => this.isValidElement(e, options))
-      .reduce((prev, current) => prev.baseHeight > current.baseHeight ? prev : current);
+    const validElements = tile.elements.filter(e => this.isValidElement(e, options));
+
+    if (validElements.length === 0) {
+      return ColourUtilities.colourToPalette(Colour.Black);
+    }
+
+    const topElement = validElements.reduce((prev, current) => prev.baseHeight > current.baseHeight ? prev : current);
+
+    if (!topElement) {
+      return ColourUtilities.colourToPalette(Colour.Black);
+    }
 
     switch (topElement.type) {
       case "track":
@@ -46,8 +52,13 @@ export default class ColourDecider {
 
   static getColourFromTrack(element: TrackElement): number {
     const ride = map.getRide(element.ride);
-    const scheme = ride.colourSchemes[element.colourScheme];
-    return ColourUtilities.colourToPalette(scheme ? scheme.main : ColourUtilities.colourToPalette(Colour.White));
+
+    if (element.colourScheme !== undefined) {
+      const scheme = ride.colourSchemes[element.colourScheme];
+      return ColourUtilities.colourToPalette(scheme ? scheme.main : ColourUtilities.colourToPalette(Colour.White));
+    }
+
+    return ColourUtilities.colourToPalette(Colour.Black);
   }
 
   static getColourFromSmallScenery(element: SmallSceneryElement) {
@@ -85,6 +96,6 @@ export default class ColourDecider {
       ColourUtilities.colourToPalette(Colour.DarkOliveGreen)
     ];
 
-    return colours[object % colours.length];
+    return colours[(object ?? 0) % colours.length];
   }
 }
