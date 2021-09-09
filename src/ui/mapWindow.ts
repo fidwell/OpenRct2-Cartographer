@@ -34,9 +34,45 @@ export default class MapWindow {
 
     this.loadData();
 
-    const btnRotate: ButtonWidget = {
+    const btnScaleDown: ButtonWidget = {
       type: "button",
       x: this.margin,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
+      name: "scaleDown",
+      border: true,
+      tooltip: "Scale down",
+      image: 29357 + 9, // SPR_G2_ZOOM_OUT
+      onClick: (): void => {
+        if (this.tileSize > 1) {
+          this.tileSize = this.tileSize / 2;
+          this.changeSize();
+        }
+      }
+    };
+
+    const btnScaleUp: ButtonWidget = {
+      type: "button",
+      x: this.margin + this.buttonSize,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
+      name: "scaleUp",
+      border: true,
+      tooltip: "Scale up",
+      image: 29357 + 7, // SPR_G2_ZOOM_IN
+      onClick: (): void => {
+        if (this.tileSize < 16) {
+          this.tileSize = this.tileSize * 2;
+          this.changeSize();
+        }
+      }
+    };
+
+    const btnRotate: ButtonWidget = {
+      type: "button",
+      x: this.margin + this.buttonSize * 2,
       y: this.margin + this.toolbarHeight,
       height: this.buttonSize,
       width: this.buttonSize,
@@ -49,57 +85,21 @@ export default class MapWindow {
       }
     };
 
-    const btnShowRides: ButtonWidget = {
-      type: "button",
-      x: this.margin * 2 + this.buttonSize,
-      y: this.margin + this.toolbarHeight,
-      height: this.buttonSize,
-      width: this.buttonSize,
-      name: "showRides",
-      border: true,
-      tooltip: "Toggle rides visible",
-      isPressed: this.options.showRides,
-      image: 5187, // SPR_RIDE
-      onClick: (): void => {
-        this.options.showRides = !this.options.showRides;
-        this.loadData();
-        (window.widgets.filter(w => w.name == "showRides")[0] as ButtonWidget).isPressed = this.options.showRides;
-      }
-    };
-
-    const btnShowFootpath: ButtonWidget = {
-      type: "button",
-      x: this.margin * 2 + this.buttonSize * 2,
-      y: this.margin + this.toolbarHeight,
-      height: this.buttonSize,
-      width: this.buttonSize,
-      name: "showFootpath",
-      border: true,
-      tooltip: "Toggle footpath visible",
-      isPressed: this.options.showFootpath,
-      image: 29357 + 15, // SPR_G2_BUTTON_FOOTPATH
-      onClick: (): void => {
-        this.options.showFootpath = !this.options.showFootpath;
-        this.loadData();
-        (window.widgets.filter(w => w.name == "showFootpath")[0] as ButtonWidget).isPressed = this.options.showFootpath;
-      }
-    };
-
-    const btnShowScenery: ButtonWidget = {
+    const btnShowSurface: ButtonWidget = {
       type: "button",
       x: this.margin * 2 + this.buttonSize * 3,
       y: this.margin + this.toolbarHeight,
       height: this.buttonSize,
       width: this.buttonSize,
-      name: "showScenery",
+      name: "showSurface",
       border: true,
-      tooltip: "Toggle scenery visible",
-      isPressed: this.options.showScenery,
-      image: 5171, // SPR_SCENERY 
+      tooltip: "Toggle surface visible",
+      isPressed: this.options.showSurface,
+      image: 29357 + 5, // SPR_G2_TAB_LAND
       onClick: (): void => {
-        this.options.showScenery = !this.options.showScenery;
+        this.options.showSurface = !this.options.showSurface;
         this.loadData();
-        (window.widgets.filter(w => w.name == "showScenery")[0] as ButtonWidget).isPressed = this.options.showScenery;
+        (window.widgets.filter(w => w.name == "showSurface")[0] as ButtonWidget).isPressed = this.options.showSurface;
       }
     };
 
@@ -121,57 +121,57 @@ export default class MapWindow {
       }
     };
 
-    const btnShowSurface: ButtonWidget = {
+    const btnShowScenery: ButtonWidget = {
       type: "button",
       x: this.margin * 2 + this.buttonSize * 5,
       y: this.margin + this.toolbarHeight,
       height: this.buttonSize,
       width: this.buttonSize,
-      name: "showSurface",
+      name: "showScenery",
       border: true,
-      tooltip: "Toggle surface visible",
-      isPressed: this.options.showSurface,
-      image: 29357 + 5, // SPR_G2_TAB_LAND
+      tooltip: "Toggle scenery visible",
+      isPressed: this.options.showScenery,
+      image: 5171, // SPR_SCENERY 
       onClick: (): void => {
-        this.options.showSurface = !this.options.showSurface;
+        this.options.showScenery = !this.options.showScenery;
         this.loadData();
-        (window.widgets.filter(w => w.name == "showSurface")[0] as ButtonWidget).isPressed = this.options.showSurface;
+        (window.widgets.filter(w => w.name == "showScenery")[0] as ButtonWidget).isPressed = this.options.showScenery;
       }
     };
 
-    const btnScaleDown: ButtonWidget = {
+    const btnShowFootpath: ButtonWidget = {
       type: "button",
-      x: this.margin * 3 + this.buttonSize * 6,
+      x: this.margin * 2 + this.buttonSize * 6,
       y: this.margin + this.toolbarHeight,
       height: this.buttonSize,
       width: this.buttonSize,
-      name: "scaleDown",
+      name: "showFootpath",
       border: true,
-      tooltip: "Scale down",
-      image: 29357 + 9, // SPR_G2_ZOOM_OUT
+      tooltip: "Toggle footpath visible",
+      isPressed: this.options.showFootpath,
+      image: 29357 + 15, // SPR_G2_BUTTON_FOOTPATH
       onClick: (): void => {
-        if (this.tileSize > 1) {
-          this.tileSize = this.tileSize / 2;
-          this.changeSize();
-        }
+        this.options.showFootpath = !this.options.showFootpath;
+        this.loadData();
+        (window.widgets.filter(w => w.name == "showFootpath")[0] as ButtonWidget).isPressed = this.options.showFootpath;
       }
     };
 
-    const btnScaleUp: ButtonWidget = {
+    const btnShowRides: ButtonWidget = {
       type: "button",
-      x: this.margin * 3 + this.buttonSize * 7,
+      x: this.margin * 2 + this.buttonSize * 7,
       y: this.margin + this.toolbarHeight,
       height: this.buttonSize,
       width: this.buttonSize,
-      name: "scaleUp",
+      name: "showRides",
       border: true,
-      tooltip: "Scale up",
-      image: 29357 + 7, // SPR_G2_ZOOM_IN
+      tooltip: "Toggle rides visible",
+      isPressed: this.options.showRides,
+      image: 5187, // SPR_RIDE
       onClick: (): void => {
-        if (this.tileSize < 16) {
-          this.tileSize = this.tileSize * 2;
-          this.changeSize();
-        }
+        this.options.showRides = !this.options.showRides;
+        this.loadData();
+        (window.widgets.filter(w => w.name == "showRides")[0] as ButtonWidget).isPressed = this.options.showRides;
       }
     };
 
@@ -212,16 +212,18 @@ export default class MapWindow {
       maxHeight: 10000,
       maxWidth: 10000,
       minHeight: 0,
-      minWidth: btnScaleUp.x + btnScaleUp.width + this.margin,
+      minWidth: btnShowSurface.x + btnShowSurface.width + this.margin,
       widgets: [
-        btnRotate,
-        btnShowRides,
-        btnShowFootpath,
-        btnShowScenery,
-        btnShowWater,
-        btnShowSurface,
         btnScaleDown,
         btnScaleUp,
+        btnRotate,
+
+        btnShowSurface,
+        btnShowWater,
+        btnShowScenery,
+        btnShowFootpath,
+        btnShowRides,
+
         mapWidget
       ],
       onUpdate: () => {
