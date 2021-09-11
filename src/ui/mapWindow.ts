@@ -212,7 +212,7 @@ export default class MapWindow {
       maxHeight: 10000,
       maxWidth: 10000,
       minHeight: 0,
-      minWidth: btnShowSurface.x + btnShowSurface.width + this.margin,
+      minWidth: btnShowRides.x + btnShowRides.width + this.margin,
       widgets: [
         btnScaleDown,
         btnScaleUp,
