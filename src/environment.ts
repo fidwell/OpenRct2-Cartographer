@@ -1,6 +1,6 @@
 /// <reference path="environment.d.ts" />
 
-export const pluginVersion = "1.0";
+export const pluginVersion = "1.1";
 export const pluginName = "Cartographer";
 export const pluginAuthors = ["fidwell"];
 export const buildConfiguration: BuildConfiguration = __BUILD_CONFIGURATION__;

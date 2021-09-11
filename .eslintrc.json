@@ -24,7 +24,7 @@
     "spaced-comment": 0,
     "max-len": [
       "error",
-      { "code": 120 }
+      { "code": 150 }
     ],
     "import/extensions": [
       "error",
@@ -40,7 +40,10 @@
     "linebreak-style": "off",
     "comma-dangle": "off",
     "no-shadow": "off",
-    "@typescript-eslint/no-shadow": [ "error" ]
+    "@typescript-eslint/no-shadow": [ "error" ],
+    "no-param-reassign": "off",
+    "no-use-before-define": "off",
+    "import/prefer-default-export": "off"
   },
   "settings": {
     "import/resolver": {

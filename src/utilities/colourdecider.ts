@@ -6,13 +6,13 @@ export default class ColourDecider {
   static getColourAtTile(x: number, y: number, options: Options): number {
     const tile = map.getTile(x + 1, y + 1); // Off-by-one index
 
-    const validElements = tile.elements.filter(e => this.isValidElement(e, options));
+    const validElements = tile.elements.filter((e) => this.isValidElement(e, options));
 
     if (validElements.length === 0) {
       return ColourUtilities.colourToPalette(Colour.Black);
     }
 
-    const topElement = validElements.reduce((prev, current) => prev.baseHeight > current.baseHeight ? prev : current);
+    const topElement = validElements.reduce((prev, current) => (prev.baseHeight > current.baseHeight ? prev : current));
 
     if (!topElement) {
       return ColourUtilities.colourToPalette(Colour.Black);
@@ -42,12 +42,12 @@ export default class ColourDecider {
 
       const tE = e as TrackElement;
       const ride = map.getRide(tE.ride);
-      return ride.type <= 97 && [82, 83, 84, 85, 89].indexOf(ride.type) == -1;
+      return ride.type <= 97 && [82, 83, 84, 85, 89].indexOf(ride.type) === -1;
     }
 
-    return (options.showFootpath && e.type === "footpath") ||
-      (options.showScenery && (e.type === "small_scenery" || e.type === "large_scenery")) ||
-      e.type === "surface";
+    return (options.showFootpath && e.type === "footpath")
+      || (options.showScenery && (e.type === "small_scenery" || e.type === "large_scenery"))
+      || e.type === "surface";
   }
 
   static getColourFromTrack(element: TrackElement): number {

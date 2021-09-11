@@ -1,4 +1,4 @@
-import ColourDecider from "../utilities/colourdecider"
+import ColourDecider from "../utilities/colourdecider";
 import * as Environment from "../environment";
 import Options from "../models/options";
 
@@ -11,16 +11,21 @@ export default class MapWindow {
 
   // Window-building constants
   private margin: number = 10;
+
   private toolbarHeight: number = 10;
+
   private buttonSize: number = 26;
 
   // Map information
   private mapColours: number[][] = [];
+
   private mapSize: number;
 
   // Display parameters
   private rotation: number = 0;
+
   private tileSize: number = 4;
+
   private options: Options = {
     showRides: true,
     showFootpath: true,
@@ -46,7 +51,7 @@ export default class MapWindow {
       image: 29357 + 9, // SPR_G2_ZOOM_OUT
       onClick: (): void => {
         if (this.tileSize > 1) {
-          this.tileSize = this.tileSize / 2;
+          this.tileSize /= 2;
           this.changeSize();
         }
       }
@@ -64,7 +69,7 @@ export default class MapWindow {
       image: 29357 + 7, // SPR_G2_ZOOM_IN
       onClick: (): void => {
         if (this.tileSize < 16) {
-          this.tileSize = this.tileSize * 2;
+          this.tileSize *= 2;
           this.changeSize();
         }
       }
@@ -99,7 +104,7 @@ export default class MapWindow {
       onClick: (): void => {
         this.options.showSurface = !this.options.showSurface;
         this.loadData();
-        (window.widgets.filter(w => w.name == "showSurface")[0] as ButtonWidget).isPressed = this.options.showSurface;
+        (window.widgets.filter((w) => w.name === "showSurface")[0] as ButtonWidget).isPressed = this.options.showSurface;
       }
     };
 
@@ -117,7 +122,7 @@ export default class MapWindow {
       onClick: (): void => {
         this.options.showWater = !this.options.showWater;
         this.loadData();
-        (window.widgets.filter(w => w.name == "showWater")[0] as ButtonWidget).isPressed = this.options.showWater;
+        (window.widgets.filter((w) => w.name === "showWater")[0] as ButtonWidget).isPressed = this.options.showWater;
       }
     };
 
@@ -131,11 +136,11 @@ export default class MapWindow {
       border: true,
       tooltip: "Toggle scenery visible",
       isPressed: this.options.showScenery,
-      image: 5171, // SPR_SCENERY 
+      image: 5171, // SPR_SCENERY
       onClick: (): void => {
         this.options.showScenery = !this.options.showScenery;
         this.loadData();
-        (window.widgets.filter(w => w.name == "showScenery")[0] as ButtonWidget).isPressed = this.options.showScenery;
+        (window.widgets.filter((w) => w.name === "showScenery")[0] as ButtonWidget).isPressed = this.options.showScenery;
       }
     };
 
@@ -153,7 +158,7 @@ export default class MapWindow {
       onClick: (): void => {
         this.options.showFootpath = !this.options.showFootpath;
         this.loadData();
-        (window.widgets.filter(w => w.name == "showFootpath")[0] as ButtonWidget).isPressed = this.options.showFootpath;
+        (window.widgets.filter((w) => w.name === "showFootpath")[0] as ButtonWidget).isPressed = this.options.showFootpath;
       }
     };
 
@@ -171,7 +176,7 @@ export default class MapWindow {
       onClick: (): void => {
         this.options.showRides = !this.options.showRides;
         this.loadData();
-        (window.widgets.filter(w => w.name == "showRides")[0] as ButtonWidget).isPressed = this.options.showRides;
+        (window.widgets.filter((w) => w.name === "showRides")[0] as ButtonWidget).isPressed = this.options.showRides;
       }
     };
 
@@ -186,8 +191,8 @@ export default class MapWindow {
         g.fill = 1; // Yes fill
         g.stroke = 0; // No stroke
 
-        for (let x = 0; x < this.mapSize; x++) {
-          for (let y = 0; y < this.mapSize; y++) {
+        for (let x = 0; x < this.mapSize; x += 1) {
+          for (let y = 0; y < this.mapSize; y += 1) {
             let colour: number;
             switch (this.rotation) {
               case 1: colour = this.mapColours[-y + this.mapSize - 1][x]; break;
@@ -255,12 +260,12 @@ export default class MapWindow {
 
   loadData(): void {
     this.mapColours = [];
-    for (let x = 0; x < this.mapSize; x++) {
+    for (let x = 0; x < this.mapSize; x += 1) {
       this.mapColours[x] = [];
     }
 
-    for (let x = 0; x < this.mapSize; x++) {
-      for (let y = 0; y < this.mapSize; y++) {
+    for (let x = 0; x < this.mapSize; x += 1) {
+      for (let y = 0; y < this.mapSize; y += 1) {
         this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.options);
       }
     }

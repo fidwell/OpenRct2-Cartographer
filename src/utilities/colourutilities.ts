@@ -1,5 +1,4 @@
 import { Colour } from "../enums/colour";
-import { Palette } from "../enums/palette";
 import { Terrain } from "../enums/terrain";
 
 export default class ColourUtilities {
@@ -19,9 +18,8 @@ export default class ColourUtilities {
       case Terrain.GridGreen: return 101;
       case Terrain.SandDark: return 109;
       case Terrain.SandLight: return 220;
+      default: return 209; // undefined -> pink
     }
-
-    return 209; // undefined -> pink
   }
 
   static water(): number {
@@ -63,6 +61,7 @@ export default class ColourUtilities {
       case Colour.DarkPink: return 203;
       case Colour.BrightPink: return 208;
       case Colour.LightPink: return 212;
+      default: return 9; // undefined -> black
     }
   }
 }
