@@ -38,10 +38,13 @@ export default class ColourDecider {
     if (e.isHidden) return false;
 
     if (e.type === "track") {
-      if (!options.showRides) return false;
-
       const tE = e as TrackElement;
       const ride = map.getRide(tE.ride);
+
+      if (!options.showOpenRides && ride.status === "open") return false;
+      if (!options.showTestingRides && ride.status === "testing") return false;
+      if (!options.showClosedRides && (ride.status === "closed" || ride.status === "simulating")) return false;
+
       return ride.type <= 97 && [82, 83, 84, 85, 89].indexOf(ride.type) === -1;
     }
 
