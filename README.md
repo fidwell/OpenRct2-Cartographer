@@ -1,5 +1,7 @@
 # Cartographer for OpenRCT2
 
+![Preview](https://user-images.githubusercontent.com/23201434/140837623-e8e612a8-1ffa-42e2-934a-82b6d9121f2b.png)
+
 This is a plugin for OpenRCT2. It will draw a map of your park. Instead of the weird diagonal map that is built in to the game, this map is orthogonally-oriented and thus easier to read. It uses solid colors to represent different surface textures, footpaths, rides, water, and scenery, each of which can be toggled on and off.
 
 It doesn't really do anything else, but it looks neat. You could take a screenshot of the map, import it into some image program, and then do something fun with it.
