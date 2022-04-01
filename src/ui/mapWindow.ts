@@ -1,5 +1,6 @@
 import ColourDecider from "../utilities/colourdecider";
 import * as Environment from "../environment";
+import Graphics from "./graphics";
 import Options from "../models/options";
 
 export default class MapWindow {
@@ -187,26 +188,7 @@ export default class MapWindow {
       width: 10000, //this.mapSize * this.tileSize + 1,
       height: 10000, //(1 + this.mapSize) * this.tileSize + 1,
       name: "mapWidget",
-      onDraw: (g: GraphicsContext) => {
-        g.fill = 1; // Yes fill
-        g.stroke = 0; // No stroke
-
-        for (let x = 0; x < this.mapSize; x += 1) {
-          for (let y = 0; y < this.mapSize; y += 1) {
-            let colour: number;
-            switch (this.rotation) {
-              case 1: colour = this.mapColours[-y + this.mapSize - 1][x]; break;
-              case 2: colour = this.mapColours[-x + this.mapSize - 1][-y + this.mapSize - 1]; break;
-              case 3: colour = this.mapColours[y][-x + this.mapSize - 1]; break;
-              default: colour = this.mapColours[x][y]; break;
-            }
-
-            g.colour = colour;
-            g.fill = colour;
-            g.rect(x * this.tileSize, (this.mapSize - y) * this.tileSize, this.tileSize, this.tileSize);
-          }
-        }
-      }
+      onDraw: (g: GraphicsContext) => Graphics.draw(this.tileSize, this.mapSize, this.rotation, this.mapColours, g)
     };
 
     const window = ui.openWindow({
