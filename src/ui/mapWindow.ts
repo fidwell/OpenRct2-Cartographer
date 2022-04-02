@@ -1,6 +1,7 @@
 import ColourDecider from "../utilities/colourdecider";
 import * as Environment from "../environment";
 import Graphics from "./graphics";
+import * as Logger from "../utilities/logger";
 import Options from "../models/options";
 
 export default class MapWindow {
@@ -16,6 +17,8 @@ export default class MapWindow {
   private toolbarHeight: number = 10;
 
   private buttonSize: number = 26;
+
+  private mapImageId: number = 0;
 
   // Map information
   private mapColours: number[][] = [];
@@ -37,8 +40,6 @@ export default class MapWindow {
 
   private createWindow(): Window {
     this.mapSize = map.size.x - 2; // Size is stored as 2 bigger than it really is for some reason
-
-    this.loadData();
 
     const btnScaleDown: ButtonWidget = {
       type: "button",
@@ -88,6 +89,7 @@ export default class MapWindow {
       image: 5169, // SPR_ROTATE_ARROW
       onClick: (): void => {
         this.rotation = (this.rotation + 1) % 4;
+        this.loadAndDraw();
       }
     };
 
@@ -104,7 +106,7 @@ export default class MapWindow {
       image: 29357 + 5, // SPR_G2_TAB_LAND
       onClick: (): void => {
         this.options.showSurface = !this.options.showSurface;
-        this.loadData();
+        this.loadAndDraw();
         (window.widgets.filter((w) => w.name === "showSurface")[0] as ButtonWidget).isPressed = this.options.showSurface;
       }
     };
@@ -140,7 +142,7 @@ export default class MapWindow {
       image: 5171, // SPR_SCENERY
       onClick: (): void => {
         this.options.showScenery = !this.options.showScenery;
-        this.loadData();
+        this.loadAndDraw();
         (window.widgets.filter((w) => w.name === "showScenery")[0] as ButtonWidget).isPressed = this.options.showScenery;
       }
     };
@@ -158,7 +160,7 @@ export default class MapWindow {
       image: 29357 + 15, // SPR_G2_BUTTON_FOOTPATH
       onClick: (): void => {
         this.options.showFootpath = !this.options.showFootpath;
-        this.loadData();
+        this.loadAndDraw();
         (window.widgets.filter((w) => w.name === "showFootpath")[0] as ButtonWidget).isPressed = this.options.showFootpath;
       }
     };
@@ -176,19 +178,19 @@ export default class MapWindow {
       image: 5187, // SPR_RIDE
       onClick: (): void => {
         this.options.showRides = !this.options.showRides;
-        this.loadData();
+        this.loadAndDraw();
         (window.widgets.filter((w) => w.name === "showRides")[0] as ButtonWidget).isPressed = this.options.showRides;
       }
     };
 
-    const mapWidget: CustomWidget = {
+    const mapWidget: ButtonWidget = {
       x: this.margin,
       y: this.toolbarHeight + this.buttonSize + this.margin,
-      type: "custom",
+      type: "button",
       width: 10000, //this.mapSize * this.tileSize + 1,
       height: 10000, //(1 + this.mapSize) * this.tileSize + 1,
       name: "mapWidget",
-      onDraw: (g: GraphicsContext) => Graphics.draw(this.tileSize, this.mapSize, this.rotation, this.mapColours, g)
+      image: this.mapImageId
     };
 
     const window = ui.openWindow({
@@ -233,11 +235,17 @@ export default class MapWindow {
       this.window.bringToFront();
     } else {
       this.window = this.createWindow();
+      this.loadAndDraw();
     }
   }
 
   static close(): void {
     ui.closeWindows(Environment.namespace);
+  }
+
+  loadAndDraw() {
+    this.loadData();
+    this.drawNew();
   }
 
   loadData(): void {
@@ -258,5 +266,40 @@ export default class MapWindow {
       this.window.width = this.margin * 2 + this.tileSize * this.mapSize;
       this.window.height = this.toolbarHeight + this.buttonSize + (this.mapSize + 1) * this.tileSize + this.margin * 2;
     }
+    this.loadAndDraw();
+  }
+
+  drawNew() {
+    var mapWidget = this.window.findWidget("mapWidget");
+    mapWidget.width = this.mapSize * this.tileSize;
+    mapWidget.height = this.mapSize * this.tileSize;
+
+    var myImageArray = [
+      0, 0, 0, 0, 40, 0, 0, 0,
+      0, 0, 0, 0, 50, 0, 0, 0,
+      0, 0, 0, 0, 50, 0, 0, 0,
+      30, 30, 30, 30, 50, 30, 30, 30,
+      30, 30, 30, 30, 50, 30, 30, 30,
+      0, 0, 0, 0, 50, 0, 0, 0,
+      0, 0, 0, 0, 50, 0, 0, 0,
+      0, 0, 0, 0, 40, 0, 0, 0
+    ];
+
+    this.mapImageId = Graphics.allocateImage({
+      type: "raw",
+      width: 8,
+      height: 8,
+      data: myImageArray
+    });
+
+    var imageInfo = ui.imageManager.getImageInfo(this.mapImageId);
+    var size = {
+      width: imageInfo.width,
+      height: imageInfo.height
+    };
+    ui.imageManager.draw(this.mapImageId, size, function (g) {
+      g.fill = 40;
+      //g.rect(8, 4, 48, 4);
+    });
   }
 }
