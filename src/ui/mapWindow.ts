@@ -270,27 +270,30 @@ export default class MapWindow {
   }
 
   drawNew() {
-    var mapWidget = this.window.findWidget("mapWidget");
-    mapWidget.width = this.mapSize * this.tileSize;
-    mapWidget.height = this.mapSize * this.tileSize;
-
-    var myImageArray = [
-      0, 0, 0, 0, 40, 0, 0, 0,
-      0, 0, 0, 0, 50, 0, 0, 0,
-      0, 0, 0, 0, 50, 0, 0, 0,
-      30, 30, 30, 30, 50, 30, 30, 30,
-      30, 30, 30, 30, 50, 30, 30, 30,
-      0, 0, 0, 0, 50, 0, 0, 0,
-      0, 0, 0, 0, 50, 0, 0, 0,
-      0, 0, 0, 0, 40, 0, 0, 0
+    let myImageArray = [
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0
     ];
 
-    this.mapImageId = Graphics.allocateImage({
+    //let myImageArray = this.mapColours.reduce((accumulator, value) => accumulator.concat(value), []);
+
+    this.mapImageId = Graphics.allocateImage(<RawPixelData>{
       type: "raw",
-      width: 8,
-      height: 8,
-      data: myImageArray
+      height: 8, //this.mapSize,
+      width: 8, //this.mapSize,
+      data: new Uint8Array(myImageArray)
     });
+
+    var mapWidget = <ButtonWidget>this.window.findWidget("mapWidget");
+    mapWidget.width = this.mapSize * this.tileSize;
+    mapWidget.height = this.mapSize * this.tileSize;
+    mapWidget.image = this.mapImageId;
 
     var imageInfo = ui.imageManager.getImageInfo(this.mapImageId);
     var size = {
@@ -298,8 +301,24 @@ export default class MapWindow {
       height: imageInfo.height
     };
     ui.imageManager.draw(this.mapImageId, size, function (g) {
-      g.fill = 40;
-      //g.rect(8, 4, 48, 4);
+      /*g.fill = 1; // Yes fill
+      g.stroke = 0; // No stroke
+
+      for (let x = 0; x < this.mapSize; x += 1) {
+        for (let y = 0; y < this.mapSize; y += 1) {
+          let colour: number;
+          switch (this.rotation) {
+            case 1: colour = this.mapColours[-y + this.mapSize - 1][x]; break;
+            case 2: colour = this.mapColours[-x + this.mapSize - 1][-y + this.mapSize - 1]; break;
+            case 3: colour = this.mapColours[y][-x + this.mapSize - 1]; break;
+            default: colour = this.mapColours[x][y]; break;
+          }
+
+          g.colour = colour;
+          g.fill = colour;
+          g.rect(x * this.tileSize, (this.mapSize - y) * this.tileSize, this.tileSize, this.tileSize);
+        }
+      }*/
     });
   }
 }

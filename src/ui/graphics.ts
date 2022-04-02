@@ -25,7 +25,7 @@ export default class Graphics {
     }
   }
 
-  static allocateImage(pixelData) {
+  static allocateImage(pixelData: PixelData) {
     var range = ui.imageManager.allocate(1);
     if (range) {
       ui.imageManager.setPixelData(range.start, pixelData);
