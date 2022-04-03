@@ -293,35 +293,63 @@ export default class MapWindow {
   }
 
   draw() {
-    const rotatedMap = this.rotateMap();
+    const scaledMap = MapWindow.scaleMap(this.mapColours, this.tileSize);
+    const rotatedMap = MapWindow.rotateMap(scaledMap, this.rotation);
     const flattenedColours = rotatedMap.reduce((accumulator, value) => accumulator.concat(value), []);
     Graphics.setPixelData(this.mapImageId, <RawPixelData>{
       type: "raw",
-      height: this.mapSize,
-      width: this.mapSize,
+      height: this.mapSize * this.tileSize,
+      width: this.mapSize * this.tileSize,
       data: new Uint8Array(flattenedColours)
     });
   }
 
-  rotateMap(): number[][] {
+  static rotateMap(input: number[][], rotation: number): number[][] {
+    //Logger.debug(`Rotating map...`);
     const returnValue: number[][] = [];
-    for (let x = 0; x < this.mapSize; x += 1) {
+    for (let x = 0; x < input.length; x += 1) {
       returnValue[x] = [];
     }
 
-    for (let x = 0; x < this.mapSize; x++) {
-      for (let y = 0; y < this.mapSize; y++) {
+    for (let x = 0; x < input.length; x += 1) {
+      for (let y = 0; y < input.length; y += 1) {
         let colour: number;
-        switch (this.rotation) {
-          case 1: colour = this.mapColours[-y + this.mapSize - 1][x]; break;
-          case 2: colour = this.mapColours[-x + this.mapSize - 1][-y + this.mapSize - 1]; break;
-          case 3: colour = this.mapColours[y][-x + this.mapSize - 1]; break;
-          default: colour = this.mapColours[x][y]; break;
+        switch (rotation) {
+          case 1: colour = input[-y + input.length - 1][x]; break;
+          case 2: colour = input[-x + input.length - 1][-y + input.length - 1]; break;
+          case 3: colour = input[y][-x + input.length - 1]; break;
+          default: colour = input[x][y]; break;
         }
         returnValue[x][y] = colour;
       }
     }
 
+    return returnValue;
+  }
+
+  static scaleMap(mapData: number[][], tileSize: number): number[][] {
+    //const start = new Date().getTime();
+    const newMapSize = mapData.length * tileSize;
+    //Logger.debug(`Scaling map to ${newMapSize} (${this.tileSize}x)...`);
+
+    const returnValue: number[][] = [];
+    for (let x = 0; x < newMapSize; x += 1) {
+      returnValue[x] = [];
+    }
+
+    for (let x = 0; x < mapData.length; x += 1) {
+      for (let y = 0; y < mapData.length; y += 1) {
+        for (let cx = 0; cx < tileSize; cx += 1) {
+          for (let cy = 0; cy < tileSize; cy += 1) {
+            returnValue[x * tileSize + cx][y * tileSize + cy] = mapData[x][y];
+          }
+        }
+      }
+    }
+
+    //const finish = new Date().getTime();
+    //const elapsed = finish - start;
+    //Logger.debug(`ScaleMap took ${elapsed} ms`);
     return returnValue;
   }
 }
