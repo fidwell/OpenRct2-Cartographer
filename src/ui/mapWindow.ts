@@ -277,6 +277,7 @@ export default class MapWindow {
     this.window.width = mapWidget.x + mapWidget.width + this.margin;
     this.window.height = mapWidget.y + mapWidget.height + this.margin;
 
+    Logger.debug(`Map size changed to ${this.tileSize}`);
     this.draw();
   }
 
@@ -297,7 +298,21 @@ export default class MapWindow {
   draw() {
     const scaledMap = MapWindow.scaleMap(this.mapColours, this.tileSize);
     const rotatedMap = MapWindow.rotateMap(scaledMap, this.rotation);
-    const flattenedColours = rotatedMap.reduce((accumulator, value) => accumulator.concat(value), []);
+
+    const start = new Date().getTime();
+    Logger.debug(`Reducing map...`);
+
+    const flattenedColours: number[] = [];
+    for (let i = 0; i < rotatedMap.length; i++) {
+      for (let j = 0; j < rotatedMap[i].length; j++) {
+        flattenedColours.push(rotatedMap[i][j]);
+      }
+    }
+
+    const finish = new Date().getTime();
+    const elapsed = finish - start;
+    Logger.debug(`Map reducing took ${elapsed} ms`);
+
     Graphics.setPixelData(this.mapImageId, <RawPixelData>{
       type: "raw",
       height: this.mapSize * this.tileSize,
