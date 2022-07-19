@@ -3,6 +3,7 @@ import * as Environment from "../environment";
 import Graphics from "./graphics";
 import * as Logger from "../utilities/logger";
 import Options from "../models/options";
+import PeepFinder from "../utilities/peepfinder";
 
 export default class MapWindow {
   onUpdate?: () => void;
@@ -24,6 +25,8 @@ export default class MapWindow {
   private mapColours: number[][] = [];
 
   private mapSize: number;
+
+  private peepFinder: PeepFinder = new PeepFinder();
 
   // Display parameters
   private rotation: number = 0;
@@ -316,6 +319,11 @@ export default class MapWindow {
 
   loadData(): void {
     const start = new Date().getTime();
+
+    if (this.options.showPeeps) {
+      this.peepFinder.loadPeepData(this.mapSize);
+    }
+
     this.mapColours = [];
     for (let x = 0; x < this.mapSize; x += 1) {
       this.mapColours[x] = [];
@@ -323,9 +331,10 @@ export default class MapWindow {
 
     for (let x = 0; x < this.mapSize; x += 1) {
       for (let y = 0; y < this.mapSize; y += 1) {
-        this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.options);
+        this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.options, this.peepFinder.peepCount);
       }
     }
+
     const finish = new Date().getTime();
     const elapsed = finish - start;
     Logger.debug(`LoadData took ${elapsed} ms`);

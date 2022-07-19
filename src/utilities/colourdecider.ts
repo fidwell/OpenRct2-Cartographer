@@ -1,10 +1,16 @@
 import { Colour } from "../enums/colour";
-import Options from "../models/options";
 import ColourUtilities from "./colourutilities";
+import Options from "../models/options";
 
 export default class ColourDecider {
-  static getColourAtTile(x: number, y: number, options: Options): number {
+  static getColourAtTile(x: number, y: number, options: Options, peeps: number[][]): number {
     const tile = map.getTile(x + 1, y + 1); // Off-by-one index
+
+    if (options.showPeeps) {
+      if (peeps[x][y] > 0) {
+        return ColourUtilities.colourToPalette(Colour.White);
+      }
+    }
 
     const validElements = tile.elements.filter((e) => this.isValidElement(e, options));
 
