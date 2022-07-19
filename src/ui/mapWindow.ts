@@ -31,7 +31,9 @@ export default class MapWindow {
   private tileSize: number = 2;
 
   private options: Options = {
-    showRides: true,
+    showOpenRides: true,
+    showTestingRides: true,
+    showClosedRides: true,
     showFootpath: true,
     showScenery: false,
     showSurface: true,
@@ -165,21 +167,57 @@ export default class MapWindow {
       }
     };
 
-    const btnShowRides: ButtonWidget = {
+    const btnShowOpenRides: ButtonWidget = {
       type: "button",
       x: this.margin * 2 + this.buttonSize * 7,
       y: this.margin + this.toolbarHeight,
       height: this.buttonSize,
       width: this.buttonSize,
-      name: "showRides",
+      name: "showOpenRides",
       border: true,
-      tooltip: "Toggle rides visible",
-      isPressed: this.options.showRides,
-      image: 5187, // SPR_RIDE
+      tooltip: "Toggle open rides visible",
+      isPressed: this.options.showOpenRides,
+      image: 5180, // SPR_OPEN
       onClick: (): void => {
-        this.options.showRides = !this.options.showRides;
-        this.draw();
-        (window.widgets.filter((w) => w.name === "showRides")[0] as ButtonWidget).isPressed = this.options.showRides;
+        this.options.showOpenRides = !this.options.showOpenRides;
+        this.loadData();
+        (window.widgets.filter((w) => w.name === "showOpenRides")[0] as ButtonWidget).isPressed = this.options.showOpenRides;
+      }
+    };
+
+    const btnShowTestingRides: ButtonWidget = {
+      type: "button",
+      x: this.margin * 2 + this.buttonSize * 8,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
+      name: "showTestingRides",
+      border: true,
+      tooltip: "Toggle testing rides visible",
+      isPressed: this.options.showTestingRides,
+      image: 5181, // SPR_TESTING
+      onClick: (): void => {
+        this.options.showTestingRides = !this.options.showTestingRides;
+        this.loadData();
+        (window.widgets.filter((w) => w.name === "showTestingRides")[0] as ButtonWidget).isPressed = this.options.showTestingRides;
+      }
+    };
+
+    const btnShowClosedRides: ButtonWidget = {
+      type: "button",
+      x: this.margin * 2 + this.buttonSize * 9,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
+      name: "showClosedRides",
+      border: true,
+      tooltip: "Toggle closed rides visible",
+      isPressed: this.options.showClosedRides,
+      image: 5179, // SPR_CLOSED
+      onClick: (): void => {
+        this.options.showClosedRides = !this.options.showClosedRides;
+        this.loadData();
+        (window.widgets.filter((w) => w.name === "showClosedRides")[0] as ButtonWidget).isPressed = this.options.showClosedRides;
       }
     };
 
@@ -203,7 +241,7 @@ export default class MapWindow {
       maxHeight: 10000,
       maxWidth: 10000,
       minHeight: 0,
-      minWidth: btnShowRides.x + btnShowRides.width + this.margin,
+      minWidth: btnShowClosedRides.x + btnShowClosedRides.width + this.margin,
       widgets: [
         btnScaleDown,
         btnScaleUp,
@@ -213,7 +251,9 @@ export default class MapWindow {
         btnShowWater,
         btnShowScenery,
         btnShowFootpath,
-        btnShowRides,
+        btnShowOpenRides,
+        btnShowTestingRides,
+        btnShowClosedRides,
 
         mapWidget
       ],

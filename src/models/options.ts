@@ -1,5 +1,9 @@
 export default class Options {
-  showRides: boolean;
+  showOpenRides: boolean;
+
+  showTestingRides: boolean;
+
+  showClosedRides: boolean;
 
   showFootpath: boolean;
 
