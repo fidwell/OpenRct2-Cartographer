@@ -183,12 +183,14 @@ export default class MapWindow {
       }
     };
 
+    const mapWidgetSize = this.tileSize * this.mapSize;
+
     const mapWidget: ButtonWidget = {
       x: this.margin,
       y: btnScaleDown.y + btnScaleDown.height + this.margin,
       type: "button",
-      width: 10000, //this.mapSize * this.tileSize + 1,
-      height: 10000, //(1 + this.mapSize) * this.tileSize + 1,
+      width: mapWidgetSize,
+      height: mapWidgetSize,
       name: "mapWidget",
       image: this.mapImageId
     };
@@ -305,7 +307,8 @@ export default class MapWindow {
   }
 
   static rotateMap(input: number[][], rotation: number): number[][] {
-    //Logger.debug(`Rotating map...`);
+    const start = new Date().getTime();
+    Logger.debug(`Rotating map...`);
     const returnValue: number[][] = [];
     for (let x = 0; x < input.length; x += 1) {
       returnValue[x] = [];
@@ -324,13 +327,17 @@ export default class MapWindow {
       }
     }
 
+    const finish = new Date().getTime();
+    const elapsed = finish - start;
+    Logger.debug(`RotateMap took ${elapsed} ms`);
+
     return returnValue;
   }
 
   static scaleMap(mapData: number[][], tileSize: number): number[][] {
-    //const start = new Date().getTime();
+    const start = new Date().getTime();
     const newMapSize = mapData.length * tileSize;
-    //Logger.debug(`Scaling map to ${newMapSize} (${this.tileSize}x)...`);
+    Logger.debug(`Scaling map to ${newMapSize} (${tileSize}x)...`);
 
     const returnValue: number[][] = [];
     for (let x = 0; x < newMapSize; x += 1) {
@@ -347,9 +354,9 @@ export default class MapWindow {
       }
     }
 
-    //const finish = new Date().getTime();
-    //const elapsed = finish - start;
-    //Logger.debug(`ScaleMap took ${elapsed} ms`);
+    const finish = new Date().getTime();
+    const elapsed = finish - start;
+    Logger.debug(`ScaleMap took ${elapsed} ms`);
     return returnValue;
   }
 }
