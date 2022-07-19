@@ -1,5 +1,7 @@
 import ColourDecider from "../utilities/colourdecider";
 import * as Environment from "../environment";
+import Graphics from "./graphics";
+import * as Logger from "../utilities/logger";
 import Options from "../models/options";
 
 export default class MapWindow {
@@ -16,6 +18,8 @@ export default class MapWindow {
 
   private buttonSize: number = 26;
 
+  private mapImageId: number = 0;
+
   // Map information
   private mapColours: number[][] = [];
 
@@ -24,7 +28,7 @@ export default class MapWindow {
   // Display parameters
   private rotation: number = 0;
 
-  private tileSize: number = 4;
+  private tileSize: number = 2;
 
   private options: Options = {
     showOpenRides: true,
@@ -39,8 +43,6 @@ export default class MapWindow {
   private createWindow(): Window {
     this.mapSize = map.size.x - 2; // Size is stored as 2 bigger than it really is for some reason
 
-    this.loadData();
-
     const btnScaleDown: ButtonWidget = {
       type: "button",
       x: this.margin,
@@ -53,7 +55,7 @@ export default class MapWindow {
       image: 29357 + 9, // SPR_G2_ZOOM_OUT
       onClick: (): void => {
         if (this.tileSize > 1) {
-          this.tileSize /= 2;
+          this.tileSize -= 1;
           this.changeSize();
         }
       }
@@ -71,7 +73,7 @@ export default class MapWindow {
       image: 29357 + 7, // SPR_G2_ZOOM_IN
       onClick: (): void => {
         if (this.tileSize < 16) {
-          this.tileSize *= 2;
+          this.tileSize += 1;
           this.changeSize();
         }
       }
@@ -89,6 +91,7 @@ export default class MapWindow {
       image: 5169, // SPR_ROTATE_ARROW
       onClick: (): void => {
         this.rotation = (this.rotation + 1) % 4;
+        this.draw();
       }
     };
 
@@ -105,7 +108,7 @@ export default class MapWindow {
       image: 29357 + 5, // SPR_G2_TAB_LAND
       onClick: (): void => {
         this.options.showSurface = !this.options.showSurface;
-        this.loadData();
+        this.draw();
         (window.widgets.filter((w) => w.name === "showSurface")[0] as ButtonWidget).isPressed = this.options.showSurface;
       }
     };
@@ -123,8 +126,9 @@ export default class MapWindow {
       image: 5467, // SPR_TAB_WATER
       onClick: (): void => {
         this.options.showWater = !this.options.showWater;
-        this.loadData();
         (window.widgets.filter((w) => w.name === "showWater")[0] as ButtonWidget).isPressed = this.options.showWater;
+        this.loadData();
+        this.draw();
       }
     };
 
@@ -141,8 +145,9 @@ export default class MapWindow {
       image: 5171, // SPR_SCENERY
       onClick: (): void => {
         this.options.showScenery = !this.options.showScenery;
-        this.loadData();
         (window.widgets.filter((w) => w.name === "showScenery")[0] as ButtonWidget).isPressed = this.options.showScenery;
+        this.loadData();
+        this.draw();
       }
     };
 
@@ -159,8 +164,9 @@ export default class MapWindow {
       image: 29357 + 15, // SPR_G2_BUTTON_FOOTPATH
       onClick: (): void => {
         this.options.showFootpath = !this.options.showFootpath;
-        this.loadData();
         (window.widgets.filter((w) => w.name === "showFootpath")[0] as ButtonWidget).isPressed = this.options.showFootpath;
+        this.loadData();
+        this.draw();
       }
     };
 
@@ -177,8 +183,9 @@ export default class MapWindow {
       image: 5180, // SPR_OPEN
       onClick: (): void => {
         this.options.showOpenRides = !this.options.showOpenRides;
-        this.loadData();
         (window.widgets.filter((w) => w.name === "showOpenRides")[0] as ButtonWidget).isPressed = this.options.showOpenRides;
+        this.loadData();
+        this.draw();
       }
     };
 
@@ -195,8 +202,9 @@ export default class MapWindow {
       image: 5181, // SPR_TESTING
       onClick: (): void => {
         this.options.showTestingRides = !this.options.showTestingRides;
-        this.loadData();
         (window.widgets.filter((w) => w.name === "showTestingRides")[0] as ButtonWidget).isPressed = this.options.showTestingRides;
+        this.loadData();
+        this.draw();
       }
     };
 
@@ -213,48 +221,32 @@ export default class MapWindow {
       image: 5179, // SPR_CLOSED
       onClick: (): void => {
         this.options.showClosedRides = !this.options.showClosedRides;
-        this.loadData();
         (window.widgets.filter((w) => w.name === "showClosedRides")[0] as ButtonWidget).isPressed = this.options.showClosedRides;
+        this.loadData();
+        this.draw();
       }
     };
 
-    const mapWidget: CustomWidget = {
+    const mapWidgetSize = this.tileSize * this.mapSize;
+
+    const mapWidget: ButtonWidget = {
       x: this.margin,
-      y: this.toolbarHeight + this.buttonSize + this.margin,
-      type: "custom",
-      width: 10000, //this.mapSize * this.tileSize + 1,
-      height: 10000, //(1 + this.mapSize) * this.tileSize + 1,
+      y: btnScaleDown.y + btnScaleDown.height + this.margin,
+      type: "button",
+      width: mapWidgetSize,
+      height: mapWidgetSize,
       name: "mapWidget",
-      onDraw: (g: GraphicsContext) => {
-        g.fill = 1; // Yes fill
-        g.stroke = 0; // No stroke
-
-        for (let x = 0; x < this.mapSize; x += 1) {
-          for (let y = 0; y < this.mapSize; y += 1) {
-            let colour: number;
-            switch (this.rotation) {
-              case 1: colour = this.mapColours[-y + this.mapSize - 1][x]; break;
-              case 2: colour = this.mapColours[-x + this.mapSize - 1][-y + this.mapSize - 1]; break;
-              case 3: colour = this.mapColours[y][-x + this.mapSize - 1]; break;
-              default: colour = this.mapColours[x][y]; break;
-            }
-
-            g.colour = colour;
-            g.fill = colour;
-            g.rect(x * this.tileSize, (this.mapSize - y) * this.tileSize, this.tileSize, this.tileSize);
-          }
-        }
-      }
+      image: this.mapImageId
     };
 
     const window = ui.openWindow({
       classification: Environment.namespace,
       title: `${Environment.pluginName} (v${Environment.pluginVersion})`,
       width: this.margin * 2 + this.tileSize * this.mapSize,
-      height: this.toolbarHeight + this.buttonSize + (this.mapSize + 1) * this.tileSize + this.margin * 2,
+      height: mapWidget.y + mapWidget.height + this.margin,
       maxHeight: 10000,
       maxWidth: 10000,
-      minHeight: 0,
+      minHeight: mapWidget.y + mapWidget.height + this.margin,
       minWidth: btnShowClosedRides.x + btnShowClosedRides.width + this.margin,
       widgets: [
         btnScaleDown,
@@ -291,6 +283,9 @@ export default class MapWindow {
       this.window.bringToFront();
     } else {
       this.window = this.createWindow();
+      this.initializeImage();
+      this.loadData();
+      this.draw();
     }
   }
 
@@ -299,6 +294,7 @@ export default class MapWindow {
   }
 
   loadData(): void {
+    const start = new Date().getTime();
     this.mapColours = [];
     for (let x = 0; x < this.mapSize; x += 1) {
       this.mapColours[x] = [];
@@ -309,12 +305,119 @@ export default class MapWindow {
         this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.options);
       }
     }
+    const finish = new Date().getTime();
+    const elapsed = finish - start;
+    Logger.debug(`LoadData took ${elapsed} ms`);
   }
 
   changeSize(): void {
-    if (this.window) {
-      this.window.width = this.margin * 2 + this.tileSize * this.mapSize;
-      this.window.height = this.toolbarHeight + this.buttonSize + (this.mapSize + 1) * this.tileSize + this.margin * 2;
+    if (!this.window) {
+      return;
     }
+
+    const mapWidget = <ButtonWidget>this.window.findWidget("mapWidget");
+    const mapWidgetSize = this.tileSize * this.mapSize;
+    mapWidget.width = mapWidgetSize;
+    mapWidget.height = mapWidgetSize;
+
+    this.window.width = this.window.minWidth = mapWidget.x + mapWidget.width + this.margin;
+    this.window.height = this.window.minHeight = mapWidget.y + mapWidget.height + this.margin;
+
+    Logger.debug(`Map size changed to ${this.tileSize}`);
+    this.draw();
+  }
+
+  initializeImage() {
+    this.mapImageId = Graphics.allocateImage(<RawPixelData>{
+      type: "raw",
+      height: this.mapSize,
+      width: this.mapSize,
+      data: new Uint8Array(0)
+    });
+
+    var mapWidget = <ButtonWidget>this.window.findWidget("mapWidget");
+    mapWidget.width = this.mapSize * this.tileSize;
+    mapWidget.height = this.mapSize * this.tileSize;
+    mapWidget.image = this.mapImageId;
+  }
+
+  draw() {
+    const scaledMap = MapWindow.scaleMap(this.mapColours, this.tileSize);
+    const rotatedMap = MapWindow.rotateMap(scaledMap, this.rotation);
+
+    const start = new Date().getTime();
+    Logger.debug(`Reducing map...`);
+
+    const flattenedColours: number[] = [];
+    for (let i = 0; i < rotatedMap.length; i++) {
+      for (let j = 0; j < rotatedMap[i].length; j++) {
+        flattenedColours.push(rotatedMap[i][j]);
+      }
+    }
+
+    const finish = new Date().getTime();
+    const elapsed = finish - start;
+    Logger.debug(`Map reducing took ${elapsed} ms`);
+
+    Graphics.setPixelData(this.mapImageId, <RawPixelData>{
+      type: "raw",
+      height: this.mapSize * this.tileSize,
+      width: this.mapSize * this.tileSize,
+      data: new Uint8Array(flattenedColours)
+    });
+  }
+
+  static rotateMap(input: number[][], rotation: number): number[][] {
+    const start = new Date().getTime();
+    Logger.debug(`Rotating map...`);
+    const returnValue: number[][] = [];
+    for (let x = 0; x < input.length; x += 1) {
+      returnValue[x] = [];
+    }
+
+    for (let x = 0; x < input.length; x += 1) {
+      for (let y = 0; y < input.length; y += 1) {
+        let colour: number;
+        switch (rotation) {
+          case 1: colour = input[-y + input.length - 1][x]; break;
+          case 2: colour = input[-x + input.length - 1][-y + input.length - 1]; break;
+          case 3: colour = input[y][-x + input.length - 1]; break;
+          default: colour = input[x][y]; break;
+        }
+        returnValue[x][y] = colour;
+      }
+    }
+
+    const finish = new Date().getTime();
+    const elapsed = finish - start;
+    Logger.debug(`RotateMap took ${elapsed} ms`);
+
+    return returnValue;
+  }
+
+  static scaleMap(mapData: number[][], tileSize: number): number[][] {
+    const start = new Date().getTime();
+    const newMapSize = mapData.length * tileSize;
+    Logger.debug(`Scaling map to ${newMapSize} (${tileSize}x)...`);
+
+    const returnValue: number[][] = [];
+    for (let x = 0; x < newMapSize; x += 1) {
+      returnValue[x] = [];
+    }
+
+    for (let x = 0; x < mapData.length; x += 1) {
+      for (let y = 0; y < mapData.length; y += 1) {
+        for (let cx = 0; cx < tileSize; cx += 1) {
+          for (let cy = 0; cy < tileSize; cy += 1) {
+            returnValue[x * tileSize + cx][y * tileSize + cy] = mapData[x][y];
+          }
+        }
+      }
+    }
+
+    const finish = new Date().getTime();
+    const elapsed = finish - start;
+    Logger.debug(`ScaleMap took ${elapsed} ms`);
+    return returnValue;
   }
 }
