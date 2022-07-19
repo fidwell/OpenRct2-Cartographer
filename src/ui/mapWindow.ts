@@ -126,8 +126,9 @@ export default class MapWindow {
       image: 5467, // SPR_TAB_WATER
       onClick: (): void => {
         this.options.showWater = !this.options.showWater;
-        this.loadData();
         (window.widgets.filter((w) => w.name === "showWater")[0] as ButtonWidget).isPressed = this.options.showWater;
+        this.loadData();
+        this.draw();
       }
     };
 
@@ -144,8 +145,9 @@ export default class MapWindow {
       image: 5171, // SPR_SCENERY
       onClick: (): void => {
         this.options.showScenery = !this.options.showScenery;
-        this.draw();
         (window.widgets.filter((w) => w.name === "showScenery")[0] as ButtonWidget).isPressed = this.options.showScenery;
+        this.loadData();
+        this.draw();
       }
     };
 
@@ -162,8 +164,9 @@ export default class MapWindow {
       image: 29357 + 15, // SPR_G2_BUTTON_FOOTPATH
       onClick: (): void => {
         this.options.showFootpath = !this.options.showFootpath;
-        this.draw();
         (window.widgets.filter((w) => w.name === "showFootpath")[0] as ButtonWidget).isPressed = this.options.showFootpath;
+        this.loadData();
+        this.draw();
       }
     };
 
@@ -180,8 +183,9 @@ export default class MapWindow {
       image: 5180, // SPR_OPEN
       onClick: (): void => {
         this.options.showOpenRides = !this.options.showOpenRides;
-        this.loadData();
         (window.widgets.filter((w) => w.name === "showOpenRides")[0] as ButtonWidget).isPressed = this.options.showOpenRides;
+        this.loadData();
+        this.draw();
       }
     };
 
@@ -198,8 +202,9 @@ export default class MapWindow {
       image: 5181, // SPR_TESTING
       onClick: (): void => {
         this.options.showTestingRides = !this.options.showTestingRides;
-        this.loadData();
         (window.widgets.filter((w) => w.name === "showTestingRides")[0] as ButtonWidget).isPressed = this.options.showTestingRides;
+        this.loadData();
+        this.draw();
       }
     };
 
@@ -216,8 +221,9 @@ export default class MapWindow {
       image: 5179, // SPR_CLOSED
       onClick: (): void => {
         this.options.showClosedRides = !this.options.showClosedRides;
-        this.loadData();
         (window.widgets.filter((w) => w.name === "showClosedRides")[0] as ButtonWidget).isPressed = this.options.showClosedRides;
+        this.loadData();
+        this.draw();
       }
     };
 
@@ -240,7 +246,7 @@ export default class MapWindow {
       height: mapWidget.y + mapWidget.height + this.margin,
       maxHeight: 10000,
       maxWidth: 10000,
-      minHeight: 0,
+      minHeight: mapWidget.y + mapWidget.height + this.margin,
       minWidth: btnShowClosedRides.x + btnShowClosedRides.width + this.margin,
       widgets: [
         btnScaleDown,
@@ -314,8 +320,8 @@ export default class MapWindow {
     mapWidget.width = mapWidgetSize;
     mapWidget.height = mapWidgetSize;
 
-    this.window.width = mapWidget.x + mapWidget.width + this.margin;
-    this.window.height = mapWidget.y + mapWidget.height + this.margin;
+    this.window.width = this.window.minWidth = mapWidget.x + mapWidget.width + this.margin;
+    this.window.height = this.window.minHeight = mapWidget.y + mapWidget.height + this.margin;
 
     Logger.debug(`Map size changed to ${this.tileSize}`);
     this.draw();
