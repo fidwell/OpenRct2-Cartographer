@@ -37,7 +37,8 @@ export default class MapWindow {
     showFootpath: true,
     showScenery: false,
     showSurface: true,
-    showWater: true
+    showWater: true,
+    showPeeps: false
   };
 
   private createWindow(): Window {
@@ -227,6 +228,25 @@ export default class MapWindow {
       }
     };
 
+    const btnShowPeeps: ButtonWidget = {
+      type: "button",
+      x: this.margin * 3 + this.buttonSize * 10,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
+      name: "showPeeps",
+      border: true,
+      tooltip: "Toggle peep heatmap",
+      isPressed: this.options.showPeeps,
+      image: 5193, // SPR_GUESTS
+      onClick: (): void => {
+        this.options.showPeeps = !this.options.showPeeps;
+        (window.widgets.filter((w) => w.name === "showPeeps")[0] as ButtonWidget).isPressed = this.options.showPeeps;
+        this.loadData();
+        this.draw();
+      }
+    };
+
     const mapWidgetSize = this.tileSize * this.mapSize;
 
     const mapWidget: ButtonWidget = {
@@ -247,7 +267,7 @@ export default class MapWindow {
       maxHeight: 10000,
       maxWidth: 10000,
       minHeight: mapWidget.y + mapWidget.height + this.margin,
-      minWidth: btnShowClosedRides.x + btnShowClosedRides.width + this.margin,
+      minWidth: btnShowPeeps.x + btnShowPeeps.width + this.margin,
       widgets: [
         btnScaleDown,
         btnScaleUp,
@@ -260,6 +280,7 @@ export default class MapWindow {
         btnShowOpenRides,
         btnShowTestingRides,
         btnShowClosedRides,
+        btnShowPeeps,
 
         mapWidget
       ],
