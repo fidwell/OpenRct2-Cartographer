@@ -336,13 +336,16 @@ export default class MapWindow {
       return;
     }
 
-    const mapWidget = <ButtonWidget>this.window.findWidget("mapWidget");
+    const mapWidget = <ButtonWidget> this.window.findWidget("mapWidget");
     const mapWidgetSize = this.tileSize * this.mapSize;
     mapWidget.width = mapWidgetSize;
     mapWidget.height = mapWidgetSize;
 
-    this.window.width = this.window.minWidth = mapWidget.x + mapWidget.width + this.margin;
-    this.window.height = this.window.minHeight = mapWidget.y + mapWidget.height + this.margin;
+    this.window.width = mapWidget.x + mapWidget.width + this.margin;
+    this.window.height = mapWidget.y + mapWidget.height + this.margin;
+
+    this.window.minWidth = this.window.width;
+    this.window.minHeight = this.window.height;
 
     Logger.debug(`Map size changed to ${this.tileSize}`);
     this.draw();
@@ -356,7 +359,7 @@ export default class MapWindow {
       data: new Uint8Array(0)
     });
 
-    var mapWidget = <ButtonWidget>this.window.findWidget("mapWidget");
+    const mapWidget = <ButtonWidget> this.window.findWidget("mapWidget");
     mapWidget.width = this.mapSize * this.tileSize;
     mapWidget.height = this.mapSize * this.tileSize;
     mapWidget.image = this.mapImageId;
@@ -367,11 +370,11 @@ export default class MapWindow {
     const rotatedMap = MapWindow.rotateMap(scaledMap, this.rotation);
 
     const start = new Date().getTime();
-    Logger.debug(`Reducing map...`);
+    Logger.debug("Reducing map...");
 
     const flattenedColours: number[] = [];
-    for (let i = 0; i < rotatedMap.length; i++) {
-      for (let j = 0; j < rotatedMap[i].length; j++) {
+    for (let i = 0; i < rotatedMap.length; i += 1) {
+      for (let j = 0; j < rotatedMap[i].length; j += 1) {
         flattenedColours.push(rotatedMap[i][j]);
       }
     }
@@ -390,7 +393,7 @@ export default class MapWindow {
 
   static rotateMap(input: number[][], rotation: number): number[][] {
     const start = new Date().getTime();
-    Logger.debug(`Rotating map...`);
+    Logger.debug("Rotating map...");
     const returnValue: number[][] = [];
     for (let x = 0; x < input.length; x += 1) {
       returnValue[x] = [];
