@@ -331,7 +331,7 @@ export default class MapWindow {
 
     for (let x = 0; x < this.mapSize; x += 1) {
       for (let y = 0; y < this.mapSize; y += 1) {
-        this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.options, this.peepFinder.peepCount);
+        this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.options, this.peepFinder);
       }
     }
 

@@ -1,14 +1,15 @@
 import { Colour } from "../enums/colour";
 import ColourUtilities from "./colourutilities";
 import Options from "../models/options";
+import PeepFinder from "./peepfinder";
 
 export default class ColourDecider {
-  static getColourAtTile(x: number, y: number, options: Options, peeps: number[][]): number {
+  static getColourAtTile(x: number, y: number, options: Options, peepFinder: PeepFinder): number {
     const tile = map.getTile(x + 1, y + 1); // Off-by-one index
 
     if (options.showPeeps) {
-      if (peeps[x][y] > 0) {
-        return ColourUtilities.colourToPalette(Colour.White);
+      if (peepFinder.peepCount[x][y] > 0) {
+        return ColourUtilities.gradientPaletteValue(peepFinder.peepCount[x][y], peepFinder.maxPeeps);
       }
     }
 
