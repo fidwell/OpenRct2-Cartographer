@@ -1,6 +1,8 @@
 import { Colour } from "../enums/colour";
 import { Terrain } from "../enums/terrain";
 
+// See ImageImporter.h for colour indexes
+
 export default class ColourUtilities {
   static surfaceToPalette(surface: number): number {
     switch (surface) {
@@ -38,7 +40,7 @@ export default class ColourUtilities {
       case Colour.DarkBlue: return 130;
       case Colour.LightBlue: return 136;
       case Colour.IcyBlue: return 201;
-      case Colour.Teal: return 194; // Dark and light water colors cause animation even if it's scenery
+      case Colour.Teal: return 194; // Dark and light water colours cause animation even if it's scenery
       case Colour.Aquamarine: return 200; // 236;
       case Colour.SaturatedGreen: return 196;
       case Colour.DarkGreen: return 144;
@@ -64,4 +66,31 @@ export default class ColourUtilities {
       default: return 9; // undefined -> black
     }
   }
+
+  static gradientPaletteValue(value: number, maximum: number): number {
+    if (value > 15) {
+      // Too many peeps! Warning color
+      return 209;
+    }
+
+    const proportion = value / maximum;
+    const index = Math.floor(proportion * this.peepColourGradient.length);
+    return this.peepColourGradient[index];
+  }
+
+  static peepColourGradient: number[] = [
+    21, // white
+    57, // lightest yellow
+    56,
+    55,
+    54,
+    53,
+    52,
+    51,
+    50, // yellow
+    186, // orange
+    185,
+    184,
+    173 // red
+  ];
 }

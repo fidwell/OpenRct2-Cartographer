@@ -3,6 +3,7 @@ import * as Environment from "../environment";
 import Graphics from "./graphics";
 import * as Logger from "../utilities/logger";
 import Options from "../models/options";
+import PeepFinder from "../utilities/peepfinder";
 
 export default class MapWindow {
   onUpdate?: () => void;
@@ -25,6 +26,8 @@ export default class MapWindow {
 
   private mapSize: number;
 
+  private peepFinder: PeepFinder = new PeepFinder();
+
   // Display parameters
   private rotation: number = 0;
 
@@ -37,7 +40,8 @@ export default class MapWindow {
     showFootpath: true,
     showScenery: false,
     showSurface: true,
-    showWater: true
+    showWater: true,
+    showPeeps: false
   };
 
   private createWindow(): Window {
@@ -107,8 +111,8 @@ export default class MapWindow {
       isPressed: this.options.showSurface,
       image: 29357 + 5, // SPR_G2_TAB_LAND
       onClick: (): void => {
-        (window.widgets.filter((w) => w.name === "showSurface")[0] as ButtonWidget).isPressed = this.options.showSurface;
         this.options.showSurface = !this.options.showSurface;
+        (window.widgets.filter((w) => w.name === "showSurface")[0] as ButtonWidget).isPressed = this.options.showSurface;
         this.loadData();
         this.draw();
       }
@@ -228,6 +232,25 @@ export default class MapWindow {
       }
     };
 
+    const btnShowPeeps: ButtonWidget = {
+      type: "button",
+      x: this.margin * 3 + this.buttonSize * 10,
+      y: this.margin + this.toolbarHeight,
+      height: this.buttonSize,
+      width: this.buttonSize,
+      name: "showPeeps",
+      border: true,
+      tooltip: "Toggle peep heatmap",
+      isPressed: this.options.showPeeps,
+      image: 5193, // SPR_GUESTS
+      onClick: (): void => {
+        this.options.showPeeps = !this.options.showPeeps;
+        (window.widgets.filter((w) => w.name === "showPeeps")[0] as ButtonWidget).isPressed = this.options.showPeeps;
+        this.loadData();
+        this.draw();
+      }
+    };
+
     const mapWidgetSize = this.tileSize * this.mapSize;
 
     const mapWidget: ButtonWidget = {
@@ -248,7 +271,7 @@ export default class MapWindow {
       maxHeight: 10000,
       maxWidth: 10000,
       minHeight: mapWidget.y + mapWidget.height + this.margin,
-      minWidth: btnShowClosedRides.x + btnShowClosedRides.width + this.margin,
+      minWidth: btnShowPeeps.x + btnShowPeeps.width + this.margin,
       widgets: [
         btnScaleDown,
         btnScaleUp,
@@ -261,6 +284,7 @@ export default class MapWindow {
         btnShowOpenRides,
         btnShowTestingRides,
         btnShowClosedRides,
+        btnShowPeeps,
 
         mapWidget
       ],
@@ -296,6 +320,11 @@ export default class MapWindow {
 
   loadData(): void {
     const start = new Date().getTime();
+
+    if (this.options.showPeeps) {
+      this.peepFinder.loadPeepData(this.mapSize);
+    }
+
     this.mapColours = [];
     for (let x = 0; x < this.mapSize; x += 1) {
       this.mapColours[x] = [];
@@ -303,9 +332,10 @@ export default class MapWindow {
 
     for (let x = 0; x < this.mapSize; x += 1) {
       for (let y = 0; y < this.mapSize; y += 1) {
-        this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.options);
+        this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.options, this.peepFinder);
       }
     }
+
     const finish = new Date().getTime();
     const elapsed = finish - start;
     Logger.debug(`LoadData took ${elapsed} ms`);

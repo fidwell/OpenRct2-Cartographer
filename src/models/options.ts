@@ -12,4 +12,6 @@ export default class Options {
   showWater: boolean;
 
   showSurface: boolean;
+
+  showPeeps: boolean;
 }
