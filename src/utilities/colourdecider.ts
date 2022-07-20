@@ -56,6 +56,10 @@ export default class ColourDecider {
   static getColourFromTrack(element: TrackElement): number {
     const ride = map.getRide(element.ride);
 
+    if (element.rideType === 20) { // Skip if maze
+      return ColourUtilities.colourToPalette(Colour.DarkGreen);
+    }
+
     if (element.colourScheme !== undefined) {
       const scheme = ride.colourSchemes[element.colourScheme];
       return ColourUtilities.colourToPalette(scheme ? scheme.main : ColourUtilities.colourToPalette(Colour.White));
