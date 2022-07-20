@@ -107,9 +107,10 @@ export default class MapWindow {
       isPressed: this.options.showSurface,
       image: 29357 + 5, // SPR_G2_TAB_LAND
       onClick: (): void => {
-        this.options.showSurface = !this.options.showSurface;
-        this.draw();
         (window.widgets.filter((w) => w.name === "showSurface")[0] as ButtonWidget).isPressed = this.options.showSurface;
+        this.options.showSurface = !this.options.showSurface;
+        this.loadData();
+        this.draw();
       }
     };
 
