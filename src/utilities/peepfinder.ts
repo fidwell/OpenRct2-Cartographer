@@ -7,14 +7,14 @@ export default class PeepFinder {
     this.initializeArray(mapSize);
 
     const allPeeps = map.getAllEntities("peep");
-    for (let p = 0; p < allPeeps.length; p++) {
+    for (let p = 0; p < allPeeps.length; p += 1) {
       const x = Math.floor(allPeeps[p].x / 32) - 1;
       const y = Math.floor(allPeeps[p].y / 32) - 1;
-      if (x < 0 || y < 0) continue;
-
-      this.peepCount[x][y] += 1;
-      if (this.peepCount[x][y] > this.maxPeeps) {
-        this.maxPeeps = this.peepCount[x][y];
+      if (x >= 0 && y >= 0) {
+        this.peepCount[x][y] += 1;
+        if (this.peepCount[x][y] > this.maxPeeps) {
+          this.maxPeeps = this.peepCount[x][y];
+        }
       }
     }
   }
