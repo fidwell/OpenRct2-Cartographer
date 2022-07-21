@@ -351,11 +351,12 @@ export default class MapWindow {
     mapWidget.width = mapWidgetSize;
     mapWidget.height = mapWidgetSize;
 
-    this.window.width = mapWidget.x + mapWidget.width + this.margin;
-    this.window.height = mapWidget.y + mapWidget.height + this.margin;
+    const btnShowPeeps = (this.window.widgets.filter((w) => w.name === "showPeeps")[0] as ButtonWidget);
+    this.window.minWidth = Math.max(mapWidget.x + mapWidgetSize + this.margin, btnShowPeeps.x + btnShowPeeps.width + this.margin);
+    this.window.minHeight = mapWidget.y + mapWidgetSize + this.margin;
 
-    this.window.minWidth = this.window.width;
-    this.window.minHeight = this.window.height;
+    this.window.width = this.window.minWidth;
+    this.window.height = this.window.minHeight;
 
     Logger.debug(`Map size changed to ${this.tileSize}`);
     this.draw();
