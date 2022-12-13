@@ -47,7 +47,7 @@ export default class MapWindow {
   private createWindow(): Window {
     this.mapSize = map.size.x - 2; // Size is stored as 2 bigger than it really is for some reason
 
-    const btnScaleDown: ButtonWidget = {
+    const btnScaleDown: ButtonDesc = {
       type: "button",
       x: this.margin,
       y: this.margin + this.toolbarHeight,
@@ -56,7 +56,7 @@ export default class MapWindow {
       name: "scaleDown",
       border: true,
       tooltip: "Scale down",
-      image: 29357 + 9, // SPR_G2_ZOOM_OUT
+      image: context.getIcon("zoom_out"),
       onClick: (): void => {
         if (this.tileSize > 1) {
           this.tileSize -= 1;
@@ -65,7 +65,7 @@ export default class MapWindow {
       }
     };
 
-    const btnScaleUp: ButtonWidget = {
+    const btnScaleUp: ButtonDesc = {
       type: "button",
       x: this.margin + this.buttonSize,
       y: this.margin + this.toolbarHeight,
@@ -74,7 +74,7 @@ export default class MapWindow {
       name: "scaleUp",
       border: true,
       tooltip: "Scale up",
-      image: 29357 + 7, // SPR_G2_ZOOM_IN
+      image: context.getIcon("zoom_in"),
       onClick: (): void => {
         if (this.tileSize < 16) {
           this.tileSize += 1;
@@ -83,7 +83,7 @@ export default class MapWindow {
       }
     };
 
-    const btnRotate: ButtonWidget = {
+    const btnRotate: ButtonDesc = {
       type: "button",
       x: this.margin + this.buttonSize * 2,
       y: this.margin + this.toolbarHeight,
@@ -99,7 +99,7 @@ export default class MapWindow {
       }
     };
 
-    const btnShowSurface: ButtonWidget = {
+    const btnShowSurface: ButtonDesc = {
       type: "button",
       x: this.margin * 2 + this.buttonSize * 3,
       y: this.margin + this.toolbarHeight,
@@ -109,7 +109,7 @@ export default class MapWindow {
       border: true,
       tooltip: "Toggle surface visible",
       isPressed: this.options.showSurface,
-      image: 29357 + 5, // SPR_G2_TAB_LAND
+      image: 29357 + 7, // SPR_G2_TAB_LAND
       onClick: (): void => {
         this.options.showSurface = !this.options.showSurface;
         (window.widgets.filter((w) => w.name === "showSurface")[0] as ButtonWidget).isPressed = this.options.showSurface;
@@ -118,7 +118,7 @@ export default class MapWindow {
       }
     };
 
-    const btnShowWater: ButtonWidget = {
+    const btnShowWater: ButtonDesc = {
       type: "button",
       x: this.margin * 2 + this.buttonSize * 4,
       y: this.margin + this.toolbarHeight,
@@ -137,7 +137,7 @@ export default class MapWindow {
       }
     };
 
-    const btnShowScenery: ButtonWidget = {
+    const btnShowScenery: ButtonDesc = {
       type: "button",
       x: this.margin * 2 + this.buttonSize * 5,
       y: this.margin + this.toolbarHeight,
@@ -150,13 +150,13 @@ export default class MapWindow {
       image: 5171, // SPR_SCENERY
       onClick: (): void => {
         this.options.showScenery = !this.options.showScenery;
-        (window.widgets.filter((w) => w.name === "showScenery")[0] as ButtonWidget).isPressed = this.options.showScenery;
+        (window.widgets.filter((w) => w.name === "showScenery")[0] as ButtonDesc).isPressed = this.options.showScenery;
         this.loadData();
         this.draw();
       }
     };
 
-    const btnShowFootpath: ButtonWidget = {
+    const btnShowFootpath: ButtonDesc = {
       type: "button",
       x: this.margin * 2 + this.buttonSize * 6,
       y: this.margin + this.toolbarHeight,
@@ -166,16 +166,16 @@ export default class MapWindow {
       border: true,
       tooltip: "Toggle footpath visible",
       isPressed: this.options.showFootpath,
-      image: 29357 + 15, // SPR_G2_BUTTON_FOOTPATH
+      image: 29357 + 16, // SPR_G2_BUTTON_FOOTPATH
       onClick: (): void => {
         this.options.showFootpath = !this.options.showFootpath;
-        (window.widgets.filter((w) => w.name === "showFootpath")[0] as ButtonWidget).isPressed = this.options.showFootpath;
+        (window.widgets.filter((w) => w.name === "showFootpath")[0] as ButtonDesc).isPressed = this.options.showFootpath;
         this.loadData();
         this.draw();
       }
     };
 
-    const btnShowOpenRides: ButtonWidget = {
+    const btnShowOpenRides: ButtonDesc = {
       type: "button",
       x: this.margin * 2 + this.buttonSize * 7,
       y: this.margin + this.toolbarHeight,
@@ -188,13 +188,13 @@ export default class MapWindow {
       image: 5180, // SPR_OPEN
       onClick: (): void => {
         this.options.showOpenRides = !this.options.showOpenRides;
-        (window.widgets.filter((w) => w.name === "showOpenRides")[0] as ButtonWidget).isPressed = this.options.showOpenRides;
+        (window.widgets.filter((w) => w.name === "showOpenRides")[0] as ButtonDesc).isPressed = this.options.showOpenRides;
         this.loadData();
         this.draw();
       }
     };
 
-    const btnShowTestingRides: ButtonWidget = {
+    const btnShowTestingRides: ButtonDesc = {
       type: "button",
       x: this.margin * 2 + this.buttonSize * 8,
       y: this.margin + this.toolbarHeight,
@@ -207,13 +207,13 @@ export default class MapWindow {
       image: 5181, // SPR_TESTING
       onClick: (): void => {
         this.options.showTestingRides = !this.options.showTestingRides;
-        (window.widgets.filter((w) => w.name === "showTestingRides")[0] as ButtonWidget).isPressed = this.options.showTestingRides;
+        (window.widgets.filter((w) => w.name === "showTestingRides")[0] as ButtonDesc).isPressed = this.options.showTestingRides;
         this.loadData();
         this.draw();
       }
     };
 
-    const btnShowClosedRides: ButtonWidget = {
+    const btnShowClosedRides: ButtonDesc = {
       type: "button",
       x: this.margin * 2 + this.buttonSize * 9,
       y: this.margin + this.toolbarHeight,
@@ -226,13 +226,13 @@ export default class MapWindow {
       image: 5179, // SPR_CLOSED
       onClick: (): void => {
         this.options.showClosedRides = !this.options.showClosedRides;
-        (window.widgets.filter((w) => w.name === "showClosedRides")[0] as ButtonWidget).isPressed = this.options.showClosedRides;
+        (window.widgets.filter((w) => w.name === "showClosedRides")[0] as ButtonDesc).isPressed = this.options.showClosedRides;
         this.loadData();
         this.draw();
       }
     };
 
-    const btnShowPeeps: ButtonWidget = {
+    const btnShowPeeps: ButtonDesc = {
       type: "button",
       x: this.margin * 3 + this.buttonSize * 10,
       y: this.margin + this.toolbarHeight,
@@ -245,7 +245,7 @@ export default class MapWindow {
       image: 5193, // SPR_GUESTS
       onClick: (): void => {
         this.options.showPeeps = !this.options.showPeeps;
-        (window.widgets.filter((w) => w.name === "showPeeps")[0] as ButtonWidget).isPressed = this.options.showPeeps;
+        (window.widgets.filter((w) => w.name === "showPeeps")[0] as ButtonDesc).isPressed = this.options.showPeeps;
         this.loadData();
         this.draw();
       }
@@ -253,7 +253,7 @@ export default class MapWindow {
 
     const mapWidgetSize = this.tileSize * this.mapSize;
 
-    const mapWidget: ButtonWidget = {
+    const mapWidget: ButtonDesc = {
       x: this.margin,
       y: btnScaleDown.y + btnScaleDown.height + this.margin,
       type: "button",

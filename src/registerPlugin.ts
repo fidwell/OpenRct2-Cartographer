@@ -9,5 +9,6 @@ registerPlugin({
   authors: Environment.pluginAuthors,
   type: "local",
   licence: "MIT",
+  targetApiVersion: 65,
   main
 });
