@@ -67,7 +67,7 @@ export default class ColourDecider {
       return ColourUtilities.colourToPalette(Colour.DarkGreen);
     }
 
-    if (element.colourScheme !== undefined) {
+    if (element.colourScheme !== undefined && element.colourScheme !== null) {
       const scheme = ride.colourSchemes[element.colourScheme];
       return ColourUtilities.colourToPalette(scheme ? scheme.main : ColourUtilities.colourToPalette(Colour.White));
     }
@@ -84,7 +84,11 @@ export default class ColourDecider {
   }
 
   static getColourFromFootpath(element: FootpathElement): number {
-    return this.getColourFromFootpathType(element.object);
+    if (element.surfaceObject !== null) {
+      return this.getColourFromFootpathType(element.surfaceObject);
+    }
+
+    return 0;
   }
 
   static getColourFromSurface(element: SurfaceElement, options: Options): number {

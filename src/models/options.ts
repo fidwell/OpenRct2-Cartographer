@@ -1,17 +1,17 @@
 export default class Options {
-  showOpenRides: boolean;
+  showOpenRides: boolean = false;
 
-  showTestingRides: boolean;
+  showTestingRides: boolean = false;
 
-  showClosedRides: boolean;
+  showClosedRides: boolean = false;
 
-  showFootpath: boolean;
+  showFootpath: boolean = false;
 
-  showScenery: boolean;
+  showScenery: boolean = false;
 
-  showWater: boolean;
+  showWater: boolean = false;
 
-  showSurface: boolean;
+  showSurface: boolean = false;
 
-  showPeeps: boolean;
+  showPeeps: boolean = false;
 }

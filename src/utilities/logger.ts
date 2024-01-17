@@ -1,5 +1,3 @@
-import * as Environment from "../environment";
-
 /**
  * The available levels of logging.
  */
@@ -13,9 +11,7 @@ function print(level: LogLevel, color: number, message: string): void {
 }
 
 export function debug(message: string): void {
-  if (Environment.isDevelopment) {
-    print("debug", 94, message);
-  }
+  print("debug", 94, message);
 }
 
 export function warning(message: string): void {

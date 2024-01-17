@@ -24,7 +24,7 @@ export default class MapWindow {
   // Map information
   private mapColours: number[][] = [];
 
-  private mapSize: number;
+  private mapSize: number = 0;
 
   private peepFinder: PeepFinder = new PeepFinder();
 
@@ -368,12 +368,14 @@ export default class MapWindow {
       height: this.mapSize,
       width: this.mapSize,
       data: new Uint8Array(0)
-    });
+    }) ?? 0;
 
-    const mapWidget = <ButtonWidget> this.window.findWidget("mapWidget");
-    mapWidget.width = this.mapSize * this.tileSize;
-    mapWidget.height = this.mapSize * this.tileSize;
-    mapWidget.image = this.mapImageId;
+    if (this.window !== undefined) {
+      const mapWidget = <ButtonWidget> this.window.findWidget("mapWidget");
+      mapWidget.width = this.mapSize * this.tileSize;
+      mapWidget.height = this.mapSize * this.tileSize;
+      mapWidget.image = this.mapImageId ?? 0;
+    }
   }
 
   draw() {

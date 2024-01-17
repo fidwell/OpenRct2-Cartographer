@@ -1,7 +1,5 @@
-/// <reference path="../lib/openrct2.d.ts" />
-
-import * as Environment from "./environment";
 import main from "./main";
+import * as Environment from "./environment";
 
 registerPlugin({
   name: Environment.pluginName,
@@ -9,6 +7,6 @@ registerPlugin({
   authors: Environment.pluginAuthors,
   type: "local",
   licence: "MIT",
-  targetApiVersion: 65,
+  targetApiVersion: 81,
   main
 });
