@@ -1,26 +1,65 @@
 import { Colour } from "../enums/colour";
-import { Terrain } from "../enums/terrain";
 
 // See ImageImporter.h for colour indexes
 
 export default class ColourUtilities {
   static surfaceToPalette(surface: number): number {
-    switch (surface) {
-      case Terrain.Grass: return 72;
-      case Terrain.Sand: return 42;
-      case Terrain.Dirt: return 218;
-      case Terrain.Rock: return 13;
-      case Terrain.Martian: return 109;
-      case Terrain.Checkerboard: return 20;
-      case Terrain.GrassClumps: return 23;
-      case Terrain.Ice: return 139;
-      case Terrain.GridRed: return 173;
-      case Terrain.GridYellow: return 54;
-      case Terrain.GridBlue: return 157; // It's really purple
-      case Terrain.GridGreen: return 101;
-      case Terrain.SandDark: return 109;
-      case Terrain.SandLight: return 220;
+    const surfaceObject = objectManager.getObject("terrain_surface", surface);
+    switch (surfaceObject.identifier.split(".")[2]) {
+      case "grass": return 72;
+      case "grass_clumps": return 23;
+      case "dirt": return 218;
+      case "ice": return 139;
+      case "rock": return 13;
+      case "sand": return 44;
+      case "martian": return 109;
+      case "sand_brown": return 221;
+      case "sand_red": return 111;
+      
+      // rct1
+      case "rust": return 220;
+      case "wood": return 47;
+      case "roof_grey": return 17;
+      case "roof_red": return 176;
+      
+      case "chequerboard": return 16;
+      case "grid_green": return 101;
+      case "grid_purple": return 157;
+      case "grid_red": return 173;
+      case "grid_yellow": return 54;
+      case "void": return 4;
       default: return 209; // undefined -> pink
+    }
+  }
+
+  static footpathToPalette(footpath: number): number {
+    const pathType = objectManager.getObject("footpath_surface", footpath);
+    switch (pathType.identifier.split(".")[2]) {
+      case "dirt":
+        return 216;
+      case "crazy_paving":
+        return 223;
+      case "ash":
+        return 10;
+      case "tarmac_red":
+        return 62;
+      case "tarmac_green":
+        return 75;
+      case "tarmac_brown":
+        return 34;
+      case "tarmac":
+      case "road":
+        return 15;
+      case "queue_yellow":
+        return 54;
+      case "queue_red":
+        return 173;
+      case "queue_green":
+        return 100;
+      case "queue_blue":
+        return 137;
+      default:
+        return 209; // undefined -> pink
     }
   }
 

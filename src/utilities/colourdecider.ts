@@ -84,11 +84,7 @@ export default class ColourDecider {
   }
 
   static getColourFromFootpath(element: FootpathElement): number {
-    if (element.surfaceObject !== null) {
-      return this.getColourFromFootpathType(element.surfaceObject);
-    }
-
-    return 0;
+    return ColourUtilities.footpathToPalette(element.surfaceObject ?? element.object ?? 0);
   }
 
   static getColourFromSurface(element: SurfaceElement, options: Options): number {
@@ -97,23 +93,5 @@ export default class ColourDecider {
     }
 
     return options.showSurface ? ColourUtilities.surfaceToPalette(element.surfaceStyle) : ColourUtilities.colourToPalette(Colour.Black);
-  }
-
-  private static getColourFromFootpathType(object: number): number {
-    // We can't actually know what kind of footpath it is just
-    // based on the object number, since that number will
-    // change based on what objects are selected in the map.
-
-    // However we should at least differentiate somehow, so
-    // let's pick some colors at random...
-    const colours: number[] = [
-      ColourUtilities.colourToPalette(Colour.Grey),
-      ColourUtilities.colourToPalette(Colour.LightBrown),
-      ColourUtilities.colourToPalette(Colour.DarkBrown),
-      ColourUtilities.colourToPalette(Colour.SaturatedBrown),
-      ColourUtilities.colourToPalette(Colour.DarkOliveGreen)
-    ];
-
-    return colours[(object ?? 0) % colours.length];
   }
 }
