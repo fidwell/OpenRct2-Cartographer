@@ -15,19 +15,22 @@ export default class ColourUtilities {
       case "martian": return 109;
       case "sand_brown": return 221;
       case "sand_red": return 111;
-      
+
       // rct1
       case "rust": return 220;
       case "wood": return 47;
       case "roof_grey": return 17;
       case "roof_red": return 176;
-      
       case "chequerboard": return 16;
       case "grid_green": return 101;
       case "grid_purple": return 157;
       case "grid_red": return 173;
       case "grid_yellow": return 54;
+
+      // open
       case "void": return 4;
+      case "wildflowers": return 74;
+
       default: return 209; // undefined -> pink
     }
   }
@@ -58,6 +61,9 @@ export default class ColourUtilities {
         return 100;
       case "queue_blue":
         return 137;
+      case "invisible":
+      case "queue_invisible":
+        return 0;
       default:
         return 209; // undefined -> pink
     }
@@ -102,6 +108,31 @@ export default class ColourUtilities {
       case Colour.DarkPink: return 203;
       case Colour.BrightPink: return 208;
       case Colour.LightPink: return 212;
+      // Extended
+      case Colour.ArmyGreen: return 14;
+      case Colour.Honeydew: return 21;
+      case Colour.Tan: return 31;
+      case Colour.Maroon: return 50;
+      case Colour.CoralPink: return 58;
+      case Colour.ForestGreen: return 62;
+      case Colour.Chartreuse: return 69;
+      case Colour.HunterGreen: return 15;
+      case Colour.Celadon: return 80;
+      case Colour.LimeGreen: return 94;
+      case Colour.Sepia: return 98;
+      case Colour.Peach: return 106;
+      case Colour.Periwinkle: return 118;
+      case Colour.Viridian: return 133;
+      case Colour.SeafoamGreen: return 142;
+      case Colour.Violet: return 153;
+      case Colour.Lavender: return 200;
+      case Colour.PastelOrange: return 177;
+      case Colour.DeepWater: return 181;
+      case Colour.PastelPink: return 203;
+      case Colour.Umber: return 205;
+      case Colour.Beige: return 213;
+      case Colour.Invisible: return 0;
+      case Colour.Void: return 0;
       default: return 9; // undefined -> black
     }
   }

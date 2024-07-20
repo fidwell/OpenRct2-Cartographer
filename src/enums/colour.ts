@@ -32,5 +32,31 @@ export enum Colour {
   BrightRed,
   DarkPink,
   BrightPink,
-  LightPink
+  LightPink,
+
+  // Extended colours
+  ArmyGreen,
+  Honeydew,
+  Tan,
+  Maroon,
+  CoralPink,
+  ForestGreen,
+  Chartreuse,
+  HunterGreen,
+  Celadon,
+  LimeGreen,
+  Sepia,
+  Peach,
+  Periwinkle,
+  Viridian,
+  SeafoamGreen,
+  Violet,
+  Lavender,
+  PastelOrange,
+  DeepWater,
+  PastelPink,
+  Umber,
+  Beige,
+  Invisible,
+  Void
 }
