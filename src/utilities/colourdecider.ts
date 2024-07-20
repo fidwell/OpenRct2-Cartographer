@@ -1,6 +1,6 @@
 import { Colour } from "../enums/colour";
-import ColourUtilities from "./colourutilities";
 import Options from "../models/options";
+import ColourUtilities from "./colourutilities";
 import PeepFinder from "./peepfinder";
 
 export default class ColourDecider {
@@ -16,13 +16,13 @@ export default class ColourDecider {
     const validElements = tile.elements.filter((e) => this.isValidElement(e, options));
 
     if (validElements.length === 0) {
-      return ColourUtilities.colourToPalette(Colour.Black);
+      return ColourUtilities.colourToPalette(Colour.Void);
     }
 
     const topElement = validElements.reduce((prev, current) => (prev.baseHeight > current.baseHeight ? prev : current));
 
     if (!topElement) {
-      return ColourUtilities.colourToPalette(Colour.Black);
+      return ColourUtilities.colourToPalette(Colour.Void);
     }
 
     switch (topElement.type) {
@@ -37,7 +37,7 @@ export default class ColourDecider {
       case "surface":
         return this.getColourFromSurface(topElement as SurfaceElement, options);
       default:
-        return ColourUtilities.colourToPalette(Colour.Black);
+        return ColourUtilities.colourToPalette(Colour.Void);
     }
   }
 
@@ -72,7 +72,7 @@ export default class ColourDecider {
       return ColourUtilities.colourToPalette(scheme ? scheme.main : ColourUtilities.colourToPalette(Colour.White));
     }
 
-    return ColourUtilities.colourToPalette(Colour.Black);
+    return ColourUtilities.colourToPalette(Colour.Void);
   }
 
   static getColourFromSmallScenery(element: SmallSceneryElement) {
@@ -92,6 +92,6 @@ export default class ColourDecider {
       return ColourUtilities.water();
     }
 
-    return options.showSurface ? ColourUtilities.surfaceToPalette(element.surfaceStyle) : ColourUtilities.colourToPalette(Colour.Black);
+    return options.showSurface ? ColourUtilities.surfaceToPalette(element.surfaceStyle) : ColourUtilities.colourToPalette(Colour.Void);
   }
 }

@@ -28,7 +28,7 @@ export default class ColourUtilities {
       case "grid_yellow": return 54;
 
       // open
-      case "void": return 4;
+      case "void": return this.colourToPalette(Colour.Void);
       case "wildflowers": return 74;
 
       default: return 209; // undefined -> pink
@@ -74,66 +74,65 @@ export default class ColourUtilities {
   }
 
   static colourToPalette(colour: number): number {
-    // Probably not "exact". I made up this mapping
     switch (colour) {
-      case Colour.Black: return 9;
+      case Colour.Black: return 11;
       case Colour.Grey: return 16;
       case Colour.White: return 21;
       case Colour.DarkPurple: return 119;
-      case Colour.LightPurple: return 161;
+      case Colour.LightPurple: return 122;
       case Colour.BrightPurple: return 159;
       case Colour.DarkBlue: return 130;
       case Colour.LightBlue: return 136;
-      case Colour.IcyBlue: return 201;
-      case Colour.Teal: return 194; // Dark and light water colours cause animation even if it's scenery
-      case Colour.Aquamarine: return 200; // 236;
-      case Colour.SaturatedGreen: return 196;
-      case Colour.DarkGreen: return 144;
-      case Colour.MossGreen: return 87;
-      case Colour.BrightGreen: return 102;
-      case Colour.OliveGreen: return 285;
-      case Colour.DarkOliveGreen: return 282;
-      case Colour.BrightYellow: return 53;
+      case Colour.IcyBlue: return 139;
+      case Colour.DarkWater: return 196;
+      case Colour.LightWater: return 199;
+      case Colour.SaturatedGreen: return 96;
+      case Colour.DarkGreen: return 148;
+      case Colour.MossGreen: return 75;
+      case Colour.BrightGreen: return 100;
+      case Colour.OliveGreen: return 89;
+      case Colour.DarkOliveGreen: return 26;
+      case Colour.BrightYellow: return 55;
       case Colour.Yellow: return 52;
-      case Colour.DarkYellow: return 52;
+      case Colour.DarkYellow: return 48;
       case Colour.LightOrange: return 184;
       case Colour.DarkOrange: return 181;
-      case Colour.LightBrown: return 37;
-      case Colour.SaturatedBrown: return 291;
-      case Colour.DarkBrown: return 34;
-      case Colour.SalmonPink: return 69;
-      case Colour.BordeauxRed: return 61;
+      case Colour.LightBrown: return 38;
+      case Colour.SaturatedBrown: return 35;
+      case Colour.DarkBrown: return 218;
+      case Colour.SalmonPink: return 112;
+      case Colour.BordeauxRed: return 63;
       case Colour.SaturatedRed: return 169;
       case Colour.BrightRed: return 172;
       case Colour.DarkPink: return 203;
       case Colour.BrightPink: return 208;
-      case Colour.LightPink: return 212;
+      case Colour.LightPink: return 69;
       // Extended
-      case Colour.ArmyGreen: return 14;
-      case Colour.Honeydew: return 21;
-      case Colour.Tan: return 31;
-      case Colour.Maroon: return 50;
-      case Colour.CoralPink: return 58;
-      case Colour.ForestGreen: return 62;
-      case Colour.Chartreuse: return 69;
-      case Colour.HunterGreen: return 15;
-      case Colour.Celadon: return 80;
-      case Colour.LimeGreen: return 94;
-      case Colour.Sepia: return 98;
-      case Colour.Peach: return 106;
-      case Colour.Periwinkle: return 118;
-      case Colour.Viridian: return 133;
-      case Colour.SeafoamGreen: return 142;
-      case Colour.Violet: return 153;
-      case Colour.Lavender: return 200;
-      case Colour.PastelOrange: return 177;
-      case Colour.DeepWater: return 181;
-      case Colour.PastelPink: return 203;
-      case Colour.Umber: return 205;
-      case Colour.Beige: return 213;
+      case Colour.ArmyGreen: return 23;
+      case Colour.Honeydew: return 30;
+      case Colour.Tan: return 42;
+      case Colour.Maroon: return 60;
+      case Colour.CoralPink: return 67;
+      case Colour.ForestGreen: return 72;
+      case Colour.Chartreuse: return 78;
+      case Colour.HunterGreen: return 85;
+      case Colour.Celadon: return 92;
+      case Colour.LimeGreen: return 104;
+      case Colour.Sepia: return 109;
+      case Colour.Peach: return 115;
+      case Colour.Periwinkle: return 126;
+      case Colour.Viridian: return 144;
+      case Colour.SeafoamGreen: return 150;
+      case Colour.Violet: return 156;
+      case Colour.Lavender: return 163;
+      case Colour.PastelOrange: return 187;
+      case Colour.DeepWater: return 192;
+      case Colour.PastelPink: return 211;
+      case Colour.Umber: return 215;
+      case Colour.Beige: return 223;
       case Colour.Invisible: return 0;
-      case Colour.Void: return 0;
-      default: return 9; // undefined -> black
+      case Colour.Void:
+      default: return 10; // undefined -> void
     }
   }
 
