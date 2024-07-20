@@ -31,7 +31,7 @@ export default class MapWindow {
   private peepFinder: PeepFinder = new PeepFinder();
 
   // Display parameters
-  private rotation: number = 0;
+  private rotation: number = (ui.mainViewport.rotation + 2) % 4;
 
   private tileSize: number = 2;
 
@@ -47,7 +47,7 @@ export default class MapWindow {
   };
 
   private createWindow(): Window {
-     // Size is stored as 2 bigger than it really is to have a one-tile margin
+    // Size is stored as 2 bigger than it really is to have a one-tile margin
     this.mapWidth = map.size.x - 2;
     this.mapHeight = map.size.y - 2;
 
@@ -337,7 +337,8 @@ export default class MapWindow {
 
     for (let x = 0; x < this.mapWidth; x += 1) {
       for (let y = 0; y < this.mapHeight; y += 1) {
-        this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.options, this.peepFinder);
+        // Need to "mirror" the input so it actually looks correct
+        this.mapColours[x][this.mapHeight - 1 - y] = ColourDecider.getColourAtTile(x, y, this.options, this.peepFinder);
       }
     }
 
@@ -351,7 +352,7 @@ export default class MapWindow {
       return;
     }
 
-    const mapWidget = <ButtonWidget> this.window.findWidget("mapWidget");
+    const mapWidget = <ButtonWidget>this.window.findWidget("mapWidget");
     const isRotated = this.rotation % 2 !== 0;
     const mapWidgetWidth = this.tileSize * (isRotated ? this.mapHeight : this.mapWidth);
     const mapWidgetHeight = this.tileSize * (isRotated ? this.mapWidth : this.mapHeight);
@@ -378,7 +379,7 @@ export default class MapWindow {
     }) ?? 0;
 
     if (this.window !== undefined) {
-      const mapWidget = <ButtonWidget> this.window.findWidget("mapWidget");
+      const mapWidget = <ButtonWidget>this.window.findWidget("mapWidget");
       mapWidget.width = this.mapWidth * this.tileSize;
       mapWidget.height = this.mapHeight * this.tileSize;
       mapWidget.image = this.mapImageId ?? 0;
