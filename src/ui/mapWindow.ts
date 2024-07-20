@@ -273,8 +273,6 @@ export default class MapWindow {
       title: `${Environment.pluginName} (v${Environment.pluginVersion})`,
       width: this.margin * 2 + mapWidgetWidth,
       height: mapWidget.y + mapWidget.height + this.margin,
-      maxHeight: 10000,
-      maxWidth: 10000,
       minHeight: mapWidget.y + mapWidget.height + this.margin,
       minWidth: btnShowPeeps.x + btnShowPeeps.width + this.margin,
       widgets: [
@@ -315,6 +313,7 @@ export default class MapWindow {
       this.window = this.createWindow();
       this.initializeImage();
       this.loadData();
+      this.changeSize();
       this.draw();
     }
   }
@@ -380,8 +379,9 @@ export default class MapWindow {
 
     if (this.window !== undefined) {
       const mapWidget = <ButtonWidget>this.window.findWidget("mapWidget");
-      mapWidget.width = this.mapWidth * this.tileSize;
-      mapWidget.height = this.mapHeight * this.tileSize;
+      const isRotated = this.rotation % 2 !== 0;
+      mapWidget.width = this.tileSize * (isRotated ? this.mapHeight : this.mapWidth);
+      mapWidget.height = this.tileSize * (isRotated ? this.mapWidth : this.mapHeight);
       mapWidget.image = this.mapImageId ?? 0;
     }
   }
