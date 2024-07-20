@@ -72,6 +72,22 @@ export default class ColourUtilities {
         return this.colourToPalette(Colour.OliveGreen);
       case "tiles_red":
         return this.colourToPalette(Colour.CoralPink);
+      case "circuitboard":
+      case "queue_circuitboard":
+        return this.colourToPalette(Colour.DarkBrown);
+      case "mosaic":
+        return this.colourToPalette(Colour.Beige);
+      case "rainbow":
+        return this.colourToPalette(Colour.BrightRed);
+      case "queue_rainbow":
+        return this.colourToPalette(Colour.SaturatedRed);
+      case "rocky":
+        return this.colourToPalette(Colour.Beige);
+      case "pavement":
+      case "queue_pavement":
+        return this.colourToPalette(Colour.Beige);
+      case "medieval":
+        return this.colourToPalette(Colour.Beige);
       default: // undefined
         return this.colourToPalette(Colour.BrightPink);
     }
