@@ -96,7 +96,7 @@ export default class MapWindow {
       name: "rotate",
       border: true,
       tooltip: "Rotate view",
-      image: 5169, // SPR_ROTATE_ARROW
+      image: context.getIcon("rotate_arrow"),
       onClick: (): void => {
         this.rotation = (this.rotation + 1) % 4;
         this.changeSize();
@@ -113,7 +113,7 @@ export default class MapWindow {
       border: true,
       tooltip: "Toggle surface visible",
       isPressed: this.options.showSurface,
-      image: 29357 + 7, // SPR_G2_TAB_LAND
+      image: context.getIcon("map_gen_land"),
       onClick: (): void => {
         this.options.showSurface = !this.options.showSurface;
         (window.widgets.filter((w) => w.name === "showSurface")[0] as ButtonWidget).isPressed = this.options.showSurface;
@@ -132,7 +132,7 @@ export default class MapWindow {
       border: true,
       tooltip: "Toggle water visible",
       isPressed: this.options.showWater,
-      image: 5467, // SPR_TAB_WATER
+      image: context.getIcon("water"),
       onClick: (): void => {
         this.options.showWater = !this.options.showWater;
         (window.widgets.filter((w) => w.name === "showWater")[0] as ButtonWidget).isPressed = this.options.showWater;
@@ -151,7 +151,7 @@ export default class MapWindow {
       border: true,
       tooltip: "Toggle scenery visible",
       isPressed: this.options.showScenery,
-      image: 5171, // SPR_SCENERY
+      image: context.getIcon("scenery"),
       onClick: (): void => {
         this.options.showScenery = !this.options.showScenery;
         (window.widgets.filter((w) => w.name === "showScenery")[0] as ButtonDesc).isPressed = this.options.showScenery;
@@ -170,7 +170,7 @@ export default class MapWindow {
       border: true,
       tooltip: "Toggle footpath visible",
       isPressed: this.options.showFootpath,
-      image: 29357 + 16, // SPR_G2_BUTTON_FOOTPATH
+      image: context.getIcon("paths"),
       onClick: (): void => {
         this.options.showFootpath = !this.options.showFootpath;
         (window.widgets.filter((w) => w.name === "showFootpath")[0] as ButtonDesc).isPressed = this.options.showFootpath;
@@ -189,7 +189,7 @@ export default class MapWindow {
       border: true,
       tooltip: "Toggle open rides visible",
       isPressed: this.options.showOpenRides,
-      image: 5180, // SPR_OPEN
+      image: context.getIcon("open"),
       onClick: (): void => {
         this.options.showOpenRides = !this.options.showOpenRides;
         (window.widgets.filter((w) => w.name === "showOpenRides")[0] as ButtonDesc).isPressed = this.options.showOpenRides;
@@ -208,7 +208,7 @@ export default class MapWindow {
       border: true,
       tooltip: "Toggle testing rides visible",
       isPressed: this.options.showTestingRides,
-      image: 5181, // SPR_TESTING
+      image: context.getIcon("testing"),
       onClick: (): void => {
         this.options.showTestingRides = !this.options.showTestingRides;
         (window.widgets.filter((w) => w.name === "showTestingRides")[0] as ButtonDesc).isPressed = this.options.showTestingRides;
@@ -227,7 +227,7 @@ export default class MapWindow {
       border: true,
       tooltip: "Toggle closed rides visible",
       isPressed: this.options.showClosedRides,
-      image: 5179, // SPR_CLOSED
+      image: context.getIcon("closed"),
       onClick: (): void => {
         this.options.showClosedRides = !this.options.showClosedRides;
         (window.widgets.filter((w) => w.name === "showClosedRides")[0] as ButtonDesc).isPressed = this.options.showClosedRides;
@@ -246,7 +246,7 @@ export default class MapWindow {
       border: true,
       tooltip: "Toggle peep heatmap",
       isPressed: this.options.showPeeps,
-      image: 5193, // SPR_GUESTS
+      image: context.getIcon("guests"),
       onClick: (): void => {
         this.options.showPeeps = !this.options.showPeeps;
         (window.widgets.filter((w) => w.name === "showPeeps")[0] as ButtonDesc).isPressed = this.options.showPeeps;
