@@ -99,7 +99,7 @@ export default class MapWindow {
       image: 5169, // SPR_ROTATE_ARROW
       onClick: (): void => {
         this.rotation = (this.rotation + 1) % 4;
-        this.draw();
+        this.changeSize();
       }
     };
 
@@ -255,14 +255,15 @@ export default class MapWindow {
       }
     };
 
-    const mapWidgetSize = this.tileSize * Math.max(this.mapWidth, this.mapHeight);
+    const mapWidgetWidth = this.tileSize * this.mapWidth;
+    const mapWidgetHeight = this.tileSize * this.mapHeight;
 
     const mapWidget: ButtonDesc = {
       x: this.margin,
       y: btnScaleDown.y + btnScaleDown.height + this.margin,
       type: "button",
-      width: mapWidgetSize,
-      height: mapWidgetSize,
+      width: mapWidgetWidth,
+      height: mapWidgetHeight,
       name: "mapWidget",
       image: this.mapImageId
     };
@@ -270,7 +271,7 @@ export default class MapWindow {
     const window = ui.openWindow({
       classification: Environment.namespace,
       title: `${Environment.pluginName} (v${Environment.pluginVersion})`,
-      width: this.margin * 2 + mapWidgetSize,
+      width: this.margin * 2 + mapWidgetWidth,
       height: mapWidget.y + mapWidget.height + this.margin,
       maxHeight: 10000,
       maxWidth: 10000,
@@ -351,13 +352,15 @@ export default class MapWindow {
     }
 
     const mapWidget = <ButtonWidget> this.window.findWidget("mapWidget");
-    const mapWidgetSize = this.tileSize * Math.max(this.mapWidth, this.mapHeight);
-    mapWidget.width = mapWidgetSize;
-    mapWidget.height = mapWidgetSize;
+    const isRotated = this.rotation % 2 !== 0;
+    const mapWidgetWidth = this.tileSize * (isRotated ? this.mapHeight : this.mapWidth);
+    const mapWidgetHeight = this.tileSize * (isRotated ? this.mapWidth : this.mapHeight);
+    mapWidget.width = mapWidgetWidth;
+    mapWidget.height = mapWidgetHeight;
 
     const btnShowPeeps = (this.window.widgets.filter((w) => w.name === "showPeeps")[0] as ButtonWidget);
-    this.window.minWidth = Math.max(mapWidget.x + mapWidgetSize + this.margin, btnShowPeeps.x + btnShowPeeps.width + this.margin);
-    this.window.minHeight = mapWidget.y + mapWidgetSize + this.margin;
+    this.window.minWidth = Math.max(mapWidget.x + mapWidgetWidth + this.margin, btnShowPeeps.x + btnShowPeeps.width + this.margin);
+    this.window.minHeight = mapWidget.y + mapWidgetHeight + this.margin;
 
     this.window.width = this.window.minWidth;
     this.window.height = this.window.minHeight;
@@ -383,16 +386,17 @@ export default class MapWindow {
   }
 
   draw() {
-    const scaledMap = MapWindow.scaleMap(this.mapColours, this.tileSize);
-    const rotatedMap = MapWindow.rotateMap(scaledMap, this.rotation);
+    const rotatedMap = MapWindow.rotateMap(this.mapColours, this.rotation);
+    const scaledMap = MapWindow.scaleMap(rotatedMap, this.tileSize);
+    const finalMap = scaledMap;
 
     const start = new Date().getTime();
     Logger.debug("Reducing map...");
 
     const flattenedColours: number[] = [];
-    for (let i = 0; i < rotatedMap.length; i += 1) {
-      for (let j = 0; j < rotatedMap[i].length; j += 1) {
-        flattenedColours.push(rotatedMap[i][j]);
+    for (let y = 0; y < finalMap[0].length; y += 1) {
+      for (let x = 0; x < finalMap.length; x += 1) {
+        flattenedColours.push(finalMap[x][y]);
       }
     }
 
@@ -402,8 +406,8 @@ export default class MapWindow {
 
     Graphics.setPixelData(this.mapImageId, <RawPixelData>{
       type: "raw",
-      height: this.mapHeight * this.tileSize,
-      width: this.mapWidth * this.tileSize,
+      height: finalMap[0].length,
+      width: finalMap.length,
       data: new Uint8Array(flattenedColours)
     });
   }
@@ -411,22 +415,48 @@ export default class MapWindow {
   static rotateMap(input: number[][], rotation: number): number[][] {
     const start = new Date().getTime();
     Logger.debug("Rotating map...");
-    const returnValue: number[][] = [];
-    for (let x = 0; x < input.length; x += 1) {
-      returnValue[x] = [];
-    }
 
-    for (let x = 0; x < input.length; x += 1) {
-      for (let y = 0; y < input.length; y += 1) {
-        let colour: number;
-        switch (rotation) {
-          case 1: colour = input[-y + input.length - 1][x]; break;
-          case 2: colour = input[-x + input.length - 1][-y + input.length - 1]; break;
-          case 3: colour = input[y][-x + input.length - 1]; break;
-          default: colour = input[x][y]; break;
+    var numRows = input.length;
+    var numCols = input[0].length;
+    var returnValue: number[][];
+
+    switch (rotation) {
+      case 1:
+        returnValue = [];
+        for (var x = 0; x < numCols; x++) {
+          returnValue[x] = [];
+          for (var y = 0; y < numRows; y++) {
+            returnValue[x][y] = input[y][numCols - x - 1];
+          }
         }
-        returnValue[x][y] = colour;
-      }
+        break;
+      case 2:
+        returnValue = [];
+        for (var x = 0; x < numRows; x++) {
+          returnValue[x] = [];
+          for (var y = 0; y < numCols; y++) {
+            returnValue[x][y] = input[numRows - x - 1][numCols - y - 1];
+          }
+        }
+        break;
+      case 3:
+        returnValue = [];
+        for (var x = 0; x < numCols; x++) {
+          returnValue[x] = [];
+          for (var y = 0; y < numRows; y++) {
+            returnValue[x][y] = input[numRows - y - 1][x];
+          }
+        }
+        break;
+      default:
+        returnValue = [];
+        for (var x = 0; x < numRows; x++) {
+          returnValue[x] = [];
+          for (var y = 0; y < numCols; y++) {
+            returnValue[x][y] = input[x][y];
+          }
+        }
+        break;
     }
 
     const finish = new Date().getTime();
@@ -447,7 +477,7 @@ export default class MapWindow {
     }
 
     for (let x = 0; x < mapData.length; x += 1) {
-      for (let y = 0; y < mapData.length; y += 1) {
+      for (let y = 0; y < mapData[0].length; y += 1) {
         for (let cx = 0; cx < tileSize; cx += 1) {
           for (let cy = 0; cy < tileSize; cy += 1) {
             returnValue[x * tileSize + cx][y * tileSize + cy] = mapData[x][y];
