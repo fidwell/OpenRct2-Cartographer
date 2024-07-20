@@ -3,10 +3,10 @@ export default class PeepFinder {
 
   public maxPeeps: number = 0;
 
-  loadPeepData(mapSize: number): void {
-    this.initializeArray(mapSize);
+  loadPeepData(mapWidth: number, mapHeight: number): void {
+    this.initializeArray(mapWidth, mapHeight);
 
-    const allPeeps = map.getAllEntities("peep");
+    const allPeeps = map.getAllEntities("guest");
     for (let p = 0; p < allPeeps.length; p += 1) {
       const x = Math.floor(allPeeps[p].x / 32) - 1;
       const y = Math.floor(allPeeps[p].y / 32) - 1;
@@ -19,10 +19,10 @@ export default class PeepFinder {
     }
   }
 
-  private initializeArray(mapSize: number): void {
-    for (let x = 0; x < mapSize; x += 1) {
+  private initializeArray(mapWidth: number, mapHeight: number): void {
+    for (let x = 0; x < mapWidth; x += 1) {
       this.peepCount[x] = [];
-      for (let y = 0; y < mapSize; y += 1) {
+      for (let y = 0; y < mapHeight; y += 1) {
         this.peepCount[x][y] = 0;
       }
     }
