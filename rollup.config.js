@@ -8,25 +8,9 @@ import { promisify } from "util";
 const options =
 {
   filename: "OpenRct2-Cartographer.js",
-
-  /**
-   * Determines in what build mode the plugin should be build. The default here takes
-   * from the environment (ex. CLI arguments) with "development" as fallback.
-   */
   build: process.env.BUILD || "development"
 };
 
-/**
- * Tip: if you change the path here to your personal user folder,
- * you can ignore this change in git with:
- * ```
- * > git update-index --skip-worktree rollup.config.js
- * ```
- * To accept changes on this file again, use:
- * ```
- * > git update-index --no-skip-worktree rollup.config.js
- * ```
- */
 async function getOutput() {
   if (options.build !== "development") {
     return `./dist/${options.filename}`;
@@ -35,22 +19,18 @@ async function getOutput() {
   const platform = process.platform;
   const pluginPath = `OpenRCT2/plugin/${options.filename}`;
 
-  if (platform === "win32") // Windows
-  {
+  if (platform === "win32") { // Windows
     const { stdout } = await promisify(exec)("powershell -command \"[Environment]::GetFolderPath('MyDocuments')\"");
     return `${stdout.trim()}/${pluginPath}`;
   }
-  else if (platform === "darwin") // MacOS
-  {
+  else if (platform === "darwin") { // MacOS
     return `${homedir()}/Library/Application Support/${pluginPath}`;
   }
-  else // Linux
-  {
+  else { // Linux
     const configFolder = process.env.XDG_CONFIG_HOME || `${homedir()}/.config`;
     return `${configFolder}/${pluginPath}`;
   }
 }
-
 
 /**
  * @type {import("rollup").RollupOptions}

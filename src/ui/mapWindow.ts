@@ -1,9 +1,9 @@
-import ColourDecider from "../utilities/colourdecider";
 import * as Environment from "../environment";
-import Graphics from "./graphics";
-import * as Logger from "../utilities/logger";
 import Options from "../models/options";
+import ColourDecider from "../utilities/colourdecider";
+import * as Logger from "../utilities/logger";
 import PeepFinder from "../utilities/peepfinder";
+import Graphics from "./graphics";
 
 export default class MapWindow {
   onUpdate?: () => void;
@@ -24,7 +24,9 @@ export default class MapWindow {
   // Map information
   private mapColours: number[][] = [];
 
-  private mapSize: number = 0;
+  private mapWidth: number = 0;
+
+  private mapHeight: number = 0;
 
   private peepFinder: PeepFinder = new PeepFinder();
 
@@ -45,7 +47,9 @@ export default class MapWindow {
   };
 
   private createWindow(): Window {
-    this.mapSize = map.size.x - 2; // Size is stored as 2 bigger than it really is for some reason
+     // Size is stored as 2 bigger than it really is to have a one-tile margin
+    this.mapWidth = map.size.x - 2;
+    this.mapHeight = map.size.y - 2;
 
     const btnScaleDown: ButtonDesc = {
       type: "button",
@@ -251,7 +255,7 @@ export default class MapWindow {
       }
     };
 
-    const mapWidgetSize = this.tileSize * this.mapSize;
+    const mapWidgetSize = this.tileSize * Math.max(this.mapWidth, this.mapHeight);
 
     const mapWidget: ButtonDesc = {
       x: this.margin,
@@ -266,7 +270,7 @@ export default class MapWindow {
     const window = ui.openWindow({
       classification: Environment.namespace,
       title: `${Environment.pluginName} (v${Environment.pluginVersion})`,
-      width: this.margin * 2 + this.tileSize * this.mapSize,
+      width: this.margin * 2 + mapWidgetSize,
       height: mapWidget.y + mapWidget.height + this.margin,
       maxHeight: 10000,
       maxWidth: 10000,
@@ -322,16 +326,16 @@ export default class MapWindow {
     const start = new Date().getTime();
 
     if (this.options.showPeeps) {
-      this.peepFinder.loadPeepData(this.mapSize);
+      this.peepFinder.loadPeepData(this.mapWidth, this.mapHeight);
     }
 
     this.mapColours = [];
-    for (let x = 0; x < this.mapSize; x += 1) {
+    for (let x = 0; x < this.mapWidth; x += 1) {
       this.mapColours[x] = [];
     }
 
-    for (let x = 0; x < this.mapSize; x += 1) {
-      for (let y = 0; y < this.mapSize; y += 1) {
+    for (let x = 0; x < this.mapWidth; x += 1) {
+      for (let y = 0; y < this.mapHeight; y += 1) {
         this.mapColours[x][y] = ColourDecider.getColourAtTile(x, y, this.options, this.peepFinder);
       }
     }
@@ -347,7 +351,7 @@ export default class MapWindow {
     }
 
     const mapWidget = <ButtonWidget> this.window.findWidget("mapWidget");
-    const mapWidgetSize = this.tileSize * this.mapSize;
+    const mapWidgetSize = this.tileSize * Math.max(this.mapWidth, this.mapHeight);
     mapWidget.width = mapWidgetSize;
     mapWidget.height = mapWidgetSize;
 
@@ -365,15 +369,15 @@ export default class MapWindow {
   initializeImage() {
     this.mapImageId = Graphics.allocateImage(<RawPixelData>{
       type: "raw",
-      height: this.mapSize,
-      width: this.mapSize,
+      height: this.mapHeight,
+      width: this.mapWidth,
       data: new Uint8Array(0)
     }) ?? 0;
 
     if (this.window !== undefined) {
       const mapWidget = <ButtonWidget> this.window.findWidget("mapWidget");
-      mapWidget.width = this.mapSize * this.tileSize;
-      mapWidget.height = this.mapSize * this.tileSize;
+      mapWidget.width = this.mapWidth * this.tileSize;
+      mapWidget.height = this.mapHeight * this.tileSize;
       mapWidget.image = this.mapImageId ?? 0;
     }
   }
@@ -398,8 +402,8 @@ export default class MapWindow {
 
     Graphics.setPixelData(this.mapImageId, <RawPixelData>{
       type: "raw",
-      height: this.mapSize * this.tileSize,
-      width: this.mapSize * this.tileSize,
+      height: this.mapHeight * this.tileSize,
+      width: this.mapWidth * this.tileSize,
       data: new Uint8Array(flattenedColours)
     });
   }
