@@ -39,33 +39,41 @@ export default class ColourUtilities {
     const pathType = objectManager.getObject("footpath_surface", footpath);
     switch (pathType.identifier.split(".")[2]) {
       case "dirt":
-        return 216;
+        return this.colourToPalette(Colour.SaturatedBrown);
       case "crazy_paving":
-        return 223;
+        return this.colourToPalette(Colour.Beige);
       case "ash":
-        return 10;
+        return this.colourToPalette(Colour.Black);
       case "tarmac_red":
-        return 62;
+        return this.colourToPalette(Colour.BordeauxRed);
       case "tarmac_green":
-        return 75;
+        return this.colourToPalette(Colour.DarkGreen);
       case "tarmac_brown":
-        return 34;
+        return this.colourToPalette(Colour.Umber);
       case "tarmac":
       case "road":
-        return 15;
+        return this.colourToPalette(Colour.Grey);
       case "queue_yellow":
-        return 54;
+        return this.colourToPalette(Colour.Yellow);
       case "queue_red":
-        return 173;
+        return this.colourToPalette(Colour.BrightRed);
       case "queue_green":
-        return 100;
+        return this.colourToPalette(Colour.OliveGreen);
       case "queue_blue":
-        return 137;
+        return this.colourToPalette(Colour.LightBlue);
       case "invisible":
       case "queue_invisible":
-        return 0;
-      default:
-        return 209; // undefined -> pink
+        return this.colourToPalette(Colour.Invisible);
+      case "tiles_brown":
+        return this.colourToPalette(Colour.Beige);
+      case "tiles_grey":
+        return this.colourToPalette(Colour.Grey);
+      case "tiles_green":
+        return this.colourToPalette(Colour.OliveGreen);
+      case "tiles_red":
+        return this.colourToPalette(Colour.CoralPink);
+      default: // undefined
+        return this.colourToPalette(Colour.BrightPink);
     }
   }
 
