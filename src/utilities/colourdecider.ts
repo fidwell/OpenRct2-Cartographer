@@ -25,6 +25,10 @@ export default class ColourDecider {
       return ColourUtilities.colourToPalette(Colour.Void);
     }
 
+    if (x === 90 && y === 92) {
+      console.log(topElement);
+    }
+
     switch (topElement.type) {
       case "track":
         return this.getColourFromTrack(topElement as TrackElement);
@@ -52,7 +56,7 @@ export default class ColourDecider {
       if (!options.showTestingRides && ride.status === "testing") return false;
       if (!options.showClosedRides && (ride.status === "closed" || ride.status === "simulating")) return false;
 
-      return ride.type <= 97 && [82, 83, 84, 85, 89].indexOf(ride.type) === -1;
+      return [80, 82, 83, 84, 85, 89].indexOf(ride.type) === -1;
     }
 
     return (options.showFootpath && e.type === "footpath")
