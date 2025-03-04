@@ -25,10 +25,6 @@ export default class ColourDecider {
       return ColourUtilities.colourToPalette(Colour.Void);
     }
 
-    if (x === 90 && y === 92) {
-      console.log(topElement);
-    }
-
     switch (topElement.type) {
       case "track":
         return this.getColourFromTrack(topElement as TrackElement);
